@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <style>
+      body { font-family: arial; }
+      table { border-collapse: collapse; }
+      table tr td {  border: 1px solid; padding: 1em;
+}
+    </style>
+  </head>
+  <body>
+    <div id="main">
+        </div>
+    
+    <script  type="module">
+      const cl = console.log;
+      import  * as f  from "./funcl.js"
+      const {array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, countable_p, date_p, dec, drop, eq, even_p, filter, first, function_p, inc, last, lowerCase, map, mapEntries_2map, map_p, map_2mapEntries, neg_p, nth, number_p, odd_p, partial, partialR, pipe, pos_p, range, reduce, reverse, regexp_p, rest, string_p, sqr, takeLast, takeWhile, type, undefined_p, upperCase, zero_p} = f; 
+
+      const r = [];
+      let arr; let dict; 
+      r.push ("range(10);");
+      r.push("arr=range(1,11); arr");
+      r.push("count(arr)"); 
+      r.push("reverse(arr)");
+      r.push("count('λλ FUNCL! λλ') ");
+      r.push("reverse('λλ FUNCL! λλ' )");
+      r.push("[first(arr), last(arr)]");
+      r.push("rest(arr)");
+      r.push("takeWhile(x => x < 5, arr)");
+      r.push("takeLast(3, arr)");
+      r.push("map(sqr,arr)");
+      r.push("pipe(arr,map(sqr),reverse,map(x=>x+100),filter(odd_p))");
+      r.push("dict={}; assoc(dict, 'fn' , 'Bar' , 'ln', 'Foo')")
+      window.rows = r; 
+      const rows =  map(x => `<tr><td>${x}</td><td>${JSON.stringify(eval(x))}</td></tr>`,r);
+      const tbl = `<table>${rows}</table>`; 
+      document.querySelector("#main").innerHTML = tbl;
+      window.r  = r; 
+      </script>
+    
+    
+  </body>
+</html> 

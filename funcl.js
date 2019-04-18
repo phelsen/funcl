@@ -234,7 +234,7 @@ const last = coll =>  array_p(coll) ?  coll[coll.length-1] : last(map_2mapEntrie
 const rest = (coll) => coll.slice(1)
 const nth = (coll,n) =>  array_p(coll) ? coll[n] : nth(map_2mapEntries(coll),n)
 const drop = (coll,n) => n <= 0 ? coll : coll.slice(n)
-const takeLast = (coll,n) => coll.slice(-n)
+const takeLast = (n,coll) => coll.slice(-n)
 const take = (coll,n) => coll.slice(0,n)
 const takeWhile = (pred, coll) => {
     const ret = [];
@@ -385,4 +385,5 @@ const reverse =  coll =>   Array.isArray (coll) ?  clone(coll).reverse () : coll
 
 
 export   {
-    array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, countable_p, date_p, dec, drop, eq, even_p, filter, first, function_p, inc, last, lowerCase, map, mapEntries_2map, map_p, map_2mapEntries, neg_p, nth, number_p, odd_p, partial, partialR, pipe, pos_p, range, reduce, reverse, regexp_p, rest, string_p, sqr, takeLast, takeWhile, type, undefined_p, upperCase, zero_p}
+    array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, countable_p, date_p, dec, drop, eq, even_p, filter, first, function_p, inc, last, lowerCase, map, mapEntries_2map, map_p, map_2mapEntries, neg_p, nth, number_p, odd_p, partial, partialR, pipe, pos_p, range, reduce, reverse, regexp_p, rest, string_p, sqr, takeLast, takeWhile, type, undefined_p, upperCase, zero_p
+}
