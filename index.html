@@ -3,7 +3,7 @@
     <style>
       body { font-family: arial; }
       table { border-collapse: collapse; }
-      table tr td {  border: 1px solid; padding: 1em;
+      table tr td, table tr th {  border: 1px solid; padding: 1em; }
 }
     </style>
   </head>
@@ -12,9 +12,12 @@
         </div>
     
     <script  type="module">
+      window.obj = { fn : "peter" , addresses :[ { type : "work" , city : "heverlee "}, { type : "home" , city : "leuven" }]};
+						 
+      
       const cl = console.log;
       import  * as f  from "./funcl.js"
-      const {array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, countable_p, date_p, dec, drop, eq, even_p, filter, first, function_p, inc, last, lowerCase, map, mapEntries_2map, map_p, map_2mapEntries, neg_p, nth, number_p, odd_p, partial, partialR, pipe, pos_p, range, reduce, reverse, regexp_p, rest, string_p, sqr, takeLast, takeWhile, type, undefined_p, upperCase, zero_p} = f; 
+      const {getIn, array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, countable_p, date_p, dec, drop, eq, even_p, filter, first, function_p, inc, last, lowerCase, map, mapEntries_2map, map_p, map_2mapEntries, neg_p, nth, number_p, odd_p, partial, partialR, pipe, pos_p, range, reduce, reverse, regexp_p, rest, string_p, sqr, takeLast, takeWhile, type, undefined_p, upperCase, zero_p} = f; 
       window.f =f ;
       const r = [];
       let arr; let dict; let dict2;

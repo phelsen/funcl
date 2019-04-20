@@ -5,12 +5,13 @@ const errMsg = {
 }
 
 //  ___abcdef =>  internals, not in tests, interface changeable at any time
-const  ___start = () =>  {
+const start = () =>  {
     window.___funcl_start__ =  new Date().getTime();
 }
 
-const   ___end  = ()  => {
+const end  = ()  => {
     console.log(new Date().getTime() -  window.___funcl_start__);
+    delete window.___funcl_start__;
 }
 
 const  ___eqAtoms = (a,b) => {
@@ -132,6 +133,7 @@ const odd_p =  x => pre(number_p(x),"nb") && x % 2 === 1 // tested
 const regexp_p =  x => x instanceof RegExp // tested
 const string_p =  x => typeof x === "string" //  tested
 const undefined_p =  x => typeof x ==="undefined"// tested
+const defined_p = x => typeof x !=="undefined"
 
 // type and comparisation // type: tested
 const type = (x) =>  array_p(x)  ?  "array"
@@ -267,7 +269,8 @@ const partial = (f,...args) => {
 
 const  partialR = (fn, ...args) => {
     return function(...args2) {
-	return fn(...args2, ...args);
+	const newArgs = [...args2,...args];
+	return fn(...newArgs);
     };
 }
 
@@ -385,6 +388,19 @@ const pipe = (el,...fns) => { // tested
 const reverse =  coll =>   Array.isArray (coll) ?  clone(coll).reverse () : coll.split("").reverse ().join("")
 
 
+const getIn__ =  (m, ks, notFound) => {
+	const notFoundFn  = _ => undefined_p(notFound) ? null : notFound; 
+    return ks.reduce((obj, key) =>
+			 (defined_p(obj) && defined_p(obj[key]))
+			      ? obj[key]
+			      : notFoundFn(), m);
+    }
+
+
+const getIn = (m,ks,notFound) => getIn__(clone(m),ks,notFound); 
+
+const  sort = (coll) => coll.sort();
+
 export   {
     array_p,
     assoc,
@@ -397,12 +413,15 @@ export   {
     countable_p,
     date_p,
     dec,
+    defined_p,
     drop,
-    eq,
+    end,
     even_p,
+    eq,
     filter,
     first,
     function_p,
+    getIn,
     inc,
     last,
     lowerCase,
@@ -423,6 +442,8 @@ export   {
     reverse,
     regexp_p,
     rest,
+    sort,
+    start,
     string_p,
     sqr,
     take,
