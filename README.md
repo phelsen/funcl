@@ -1,6 +1,24 @@
-# Funcl!
+# FunCl
+[![LICENSE MIT](https://img.shields.io/npm/l/funcl.svg)](https://www.npmjs.com/package/funcl)
 
-Some javascript util functions that sure as hell ring a clojure bell!!
+
+Some javascript util functions that sure as hell ring a clojure bell!
+
+## Get it 
+
+You can install the latest release via npm:
+
+```shell
+npm install funcl
+```
+
+## test it 
+
+```shell
+npm run test
+```
+
+## some quick examples 
 
 |||
 |--- |--- |
@@ -8,7 +26,7 @@ Some javascript util functions that sure as hell ring a clojure bell!!
 |arr=range(1,11); arr|[1,2,3,4,5,6,7,8,9,10]|
 |count(arr)|10|
 |reverse(arr)|[10,9,8,7,6,5,4,3,2,1]|
-|count('λλ FUNCL! λλ')|12|
+|count('λλ FUNCL! λλ') |12|
 |reverse('λλ FUNCL! λλ' )|"λλ !LCNUF λλ"|
 |[first(arr), last(arr)]|[1,10]|
 |rest(arr)|[2,3,4,5,6,7,8,9,10]|

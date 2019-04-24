@@ -4,7 +4,6 @@ const errMsg = {
     "outofindex" : "Out of index"
 }
 
-//  ___abcdef =>  internals, not in tests, interface changeable at any time
 const start = () =>  {
     window.___funcl_start__ =  new Date().getTime();
 }
@@ -42,8 +41,7 @@ const ___eqPrimitiveMaps = (m1,m2) => {
 }
 
 
-const ___eqPrimitiveArrays = (a,b) =>  { // not tested
-    // asserts only top level
+const ___eqPrimitiveArrays = (a,b) =>  { 
     let counter = 0;
     if (!(array_p(a)) || !(array_p(b))) {
 	return false;
@@ -65,7 +63,7 @@ const ___eqPrimitiveArrays = (a,b) =>  { // not tested
     return true;
 }
 
-const ___uniqShallow = (arr) => { // untested
+const ___uniqShallow = (arr) => { 
     const out = [];
     for (let i=0; i<arr.length; i++) {
 	if (out.indexOf(arr[i])===-1) {
@@ -97,10 +95,6 @@ const ___mapKeepCollections = (map) => {
     return out;
 }
 
-
-
-// precondition
-
 const pre = (x,msgCode) => {
     if (x) {
 	return  true
@@ -109,33 +103,30 @@ const pre = (x,msgCode) => {
     throw err;
 }
 
-// predicates
-// ex: neg? => neg_p
-const array_p =  x  => Array.isArray(x) // tested
-const atom_p = x => typeof x != "undefined" &&  (x !== Object(x) || x instanceof Date || x instanceof Boolean || x instanceof RegExp) // tested
-const boolean_p = x =>  typeof x === "boolean" // tested
-const coll_p = x => (array_p(x) || map_p(x)) // tested
+const array_p =  x  => Array.isArray(x)
+const atom_p = x => typeof x != "undefined" &&  (x !== Object(x) || x instanceof Date || x instanceof Boolean || x instanceof RegExp) 
+const boolean_p = x =>  typeof x === "boolean" 
+const coll_p = x => (array_p(x) || map_p(x))  
 const countable_p = x => (string_p(x) || coll_p(x));
-const date_p = x => x instanceof Date// tested
-const even_p = x =>  pre(number_p(x),"nb") && x % 2 === 0  // tested
-const function_p =  x => typeof x === "function" // tested
-const map_p =  x => typeof x === 'object' && x !==null //tested
+const date_p = x => x instanceof Date
+const even_p = x =>  pre(number_p(x),"nb") && x % 2 === 0  
+const function_p =  x => typeof x === "function" 
+const map_p =  x => typeof x === 'object' && x !==null 
       && !Array.isArray(x)
       && Object.keys(x).length === Object.values(x).length
       && !(x instanceof RegExp)
       && !(x instanceof Boolean)
       && !(x instanceof Date)
-const neg_p = x => pre(number_p(x),"nb") &&  x < 0  // tested
-const pos_p = x => pre(number_p(x),"nb") && x > 0 //  tested
-const zero_p = x => pre(number_p(x),"nb") && x === 0  // tested
-const number_p = x => typeof x === "number" // tested
-const odd_p =  x => pre(number_p(x),"nb") && x % 2 === 1 // tested
-const regexp_p =  x => x instanceof RegExp // tested
-const string_p =  x => typeof x === "string" //  tested
-const undefined_p =  x => typeof x ==="undefined"// tested
+const neg_p = x => pre(number_p(x),"nb") &&  x < 0  
+const pos_p = x => pre(number_p(x),"nb") && x > 0 
+const zero_p = x => pre(number_p(x),"nb") && x === 0  
+const number_p = x => typeof x === "number" 
+const odd_p =  x => pre(number_p(x),"nb") && x % 2 === 1 
+const regexp_p =  x => x instanceof RegExp 
+const string_p =  x => typeof x === "string" 
+const undefined_p =  x => typeof x ==="undefined"
 const defined_p = x => typeof x !=="undefined"
 
-// type and comparisation // type: tested
 const type = (x) =>  array_p(x)  ?  "array"
       : string_p(x) ? "string"
       : number_p(x) ? "number"
@@ -149,7 +140,7 @@ const type = (x) =>  array_p(x)  ?  "array"
       : typeof x;
 
 
-const eq = (a,b) =>  {  //tested
+const eq = (a,b) =>  {  
     if   (type(a) !== type(b)) {
 	return false;
     }
@@ -207,19 +198,12 @@ const eq = (a,b) =>  {  //tested
 
 }
 
-// strings
+
 const upperCase = x => x.toUpperCase()
 const lowerCase = x => x.toLowerCase()
-
-
-///math,
-const inc = x => x+1  /// untested
+const inc = x => x+1  
 const dec = x => x-1
-const sqr = x => x * x // untested
-
-
-
-// collection forming
+const sqr = x => x * x 
 const assoc = (coll,...kvs) => {
     if (!map_p(coll)) {
 	return partialR(assoc,coll,...kvs)    }
@@ -232,11 +216,11 @@ const assoc = (coll,...kvs) => {
 
 
 
-// collection parts
 const first = coll => array_p(coll) ? coll[0] : map_2mapEntries(coll)[0];
 const last = coll =>  array_p(coll) ?  coll[coll.length-1] : last(map_2mapEntries(coll))
 const rest = (coll) => coll.slice(1)
 const nth = (coll,n) =>  n ? (pre(count(coll)>=n,"outofindex") && array_p(coll) ? coll[n] : nth(map_2mapEntries(coll),n)) :  c2 => partialR(nth,coll)(c2)
+
 const drop = (n,coll) => coll ? (n <= 0 ? coll : coll.slice(n)) : c2 => partial(drop,n)(c2)
 const take = (n,coll) => coll ?  coll.slice(0,n) : c2 => partial(take,n) (c2)
 const takeLast = (n,coll) => coll.slice(-n)
@@ -246,37 +230,25 @@ const takeWhile = (pred, coll) => {
     return ret;
 }
 
-
-
-
-// collection properties
-// tested
 const  count = (coll) => {
     pre(countable_p(coll), "countable"); 
      return Array.isArray(coll) || string_p(coll)  ? coll.length
 	: map_p(coll) ? Object.keys(coll).length : false
 }
 
-// collection parts
-
-
-// function modulators
-//tested
 const partial = (f,...args) => {
-    //tested
     return f.bind(null,...args);
 }
 
 const  partialR = (fn, ...args) => {
     return function(...args2) {
-	const newArgs = [...args2,...args];
+	const newArgs = [].concat(args2,args);
 	return fn(...newArgs);
     };
 }
 
-// sequence ops.
 const map = (f,coll) => {
-    // tested
+    
     if (!coll)  {
 	return partial(map,f);
     };
@@ -298,14 +270,13 @@ const map = (f,coll) => {
 	    })
 	: new Error(`'map' expects (function, collection)`)
 }
-// collection alterators that keep size (count(coll))
 const concat = (...x)=> array_p(first(x))  ? [].concat(...x) : Object.assign({},...x)
 const map_2mapEntries =  m => map(x => [x[0],x[1]],m)
 const mapEntries_2map =  mes => Object.assign({}, ...mes.map(me =>  ({ [me[0]] : me[1] })))
 
 
-const filter = (f,coll) => { // untested
-    // tested
+const filter = (f,coll) => { 
+
     if (!coll)  {
 	return partial(filter,f);
     };
@@ -323,8 +294,7 @@ const filter = (f,coll) => { // untested
 	: new Error(`'filter' expects (function, collection)`)
 }
 
-const reduce = (f,coll) => { //untested
-    // tested
+const reduce = (f,coll) => {
     if (!coll)  {
 	return partial(reduce,f);
     };
@@ -343,8 +313,7 @@ const reduce = (f,coll) => { //untested
 }
 
 
-// utils
-const  range = (x,y,step) => {// untested
+const  range = (x,y,step) => {
     return (x<0 || y <= x) ? [] :
 	!y ?  [...Array(x).keys()] :
 	!step
@@ -379,7 +348,7 @@ const clone = (el) =>  {
 }
 
 
-const pipe = (el,...fns) => { // tested
+const pipe = (el,...fns) => {  
     let curResult = el;
     fns.forEach(f =>   {curResult = f(curResult)});
     return curResult;
@@ -396,12 +365,16 @@ const getIn__ =  (m, ks, notFound) => {
 			      : notFoundFn(), m);
     }
 
+const sortBy = (fn,coll) =>  {
+    return coll.sort((x,y) => fn(x) > fn(y) ? 1 : -1)
+}
+
 
 const getIn = (m,ks,notFound) => getIn__(clone(m),ks,notFound); 
-
 const  sort = (coll) => coll.sort();
 
-export   {
+const toExport = {
+    sortBy,
     array_p,
     assoc,
     atom_p,
@@ -454,3 +427,5 @@ export   {
     upperCase,
     zero_p
 }
+
+module.exports = toExport; 

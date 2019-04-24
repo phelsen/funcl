@@ -1,17 +1,14 @@
-import * as f  from "./funcl.js";
-console.log("trace");
-Object.keys(f).forEach(k=>  { if (!window[k]) { window[k] = f[k].bind(window) }})
+const f = require("./funcl.js");
+const {getIn, array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, countable_p, date_p, defined_p,  dec, drop, eq, even_p, filter, first, function_p, inc, last, lowerCase, map, mapEntries_2map, map_p, map_2mapEntries, neg_p, nth, number_p, odd_p, partial, partialR, pipe, pos_p, range, reduce, reverse, regexp_p, rest, string_p, sqr, take, takeLast, takeWhile, type, undefined_p, upperCase, zero_p} = f; 
+
 
 const cl = console.log;
-
 const assert =  (test, v, expected,codeString) => 
-    ({ test : test,
-       v : v ,
-       expected : expected,
-       codeString : codeString,
-       testPassed : f.eq(v,expected)     })
-
-
+      ({ test : test,
+	 v : v ,
+	 expected : expected,
+	 codeString : codeString,
+	 testPassed : f.eq(v,expected)     })
 
 const asserts = [];
 
@@ -185,18 +182,21 @@ const nbNPassed = asserts.filter(x=>!x.testPassed).length;
 const nbPassed = asserts.filter(x=>x.testPassed).length;
 const ok =  nbPassed == asserts.length;
 
-const rows =  map(x => `<tr>
+
+const passed = '<h1>' +  (ok ? "Tests Passed!" : "Tests DID NOT pass") + '</h1>';
+const node_p = (typeof window === 'undefined')
+if (!node_p) {
+
+
+    const rows =  map(x => `<tr>
 <td>${x.test}</td>
 <td>${x.codeString}</td>
 <td>${JSON.stringify(x.expected)}</td>
 <td>${JSON.stringify(eval(x.codeString))}</td>
 <td>${x.testPassed}</td>
 </tr>`,asserts.sort((x,y)=>x.testPassed > y.testPassed ? 1 : -1));
-
-const passed = '<h1>' +  (ok ? "Tests Passed!" : "Tests DID NOT pass") + '</h1>';
-
-const tbl = `
-${passed}
+    
+    const tbl = `${passed}
 <table>
 <tr><th>Nb of tests </th><td>${asserts.length} </td></tr>
 <tr><th>Passed </th><td>${nbPassed} </td></tr>
@@ -207,6 +207,21 @@ ${passed}
 <tr><th>Name test</th><th>Code<th>Expected</th><th>Actual</th><th>Passed</th></tr>
 ${rows.join("")}
 </table>`; 
-document.querySelector("#main").innerHTML = tbl;
+    document.querySelector("#main").innerHTML = tbl;
+
+}
+
+if (node_p) {
+    if (ok) {
+
+	console.log(`${asserts.length} tests Passed!`); 
+    }   else {
+	console.log(asserts.filter(x=>!x.testPassed));
+	console.log("Tests *DID NOT*  Pass!"); 
+        console.log(`Nb Failed : ${nbNPassed}`);
+        console.log(`Nb Tottal : ${asserts.length}`);
+
+    }
+}
 
 
