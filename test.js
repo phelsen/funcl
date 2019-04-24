@@ -74,6 +74,7 @@ b("eq22", "f.eq(new RegExp('^funcl(.*)'),new RegExp('^funcl(.*)'))",true);
 b("eq23", "f.eq([/jojoj/,{ a : 12, b : 12, c: 12 , d : [9,9,new Date('2019')] },[{ a : [[]]}]], [ /jojoj/ ,{ b: 12 , a:12, c : 12, d : [9, 9, new Date('2019')]}, [{ a : [[]]} ]])",true);
 b("eq24", "f.eq([/jojoj/,{ a : 12, b : 12, c: 12 , d : [9,9,new Date('2019')] },[{ a : [[]]}]], [ /jojoj/ ,{ b: 12 , a:12, c : 12, d : [9, 9, new Date('2019')]}, [{ a : [[[]]]} ]])",false);
 b("eq25", "f.eq({ a: 12, b: 99}, { 'b' : 99, a : 12 })",true);
+b("eq25", "f.eq({ a: 12, b: 2}, { 'a' :12, b : 22 })",false);
 b("atom?,1","f.atom_p(1)",true);
 b("atom?,2","f.atom_p(0)",true);
 b("atom?,3","f.atom_p()",false);
@@ -176,7 +177,8 @@ b("drop,1", "f.drop(3,f.range(10))",[3,4,5,6,7,8,9])
 b("drop,2", "f.drop(3,f.range(1))",[])
 b("nth,1", "f.nth(f.range(10),2)",2);
 b("nth,3","{ try {  f.nth([1,2,3],10) } catch(e) {    e.message}}","Out of index")
-
+b("assoc,1","f.assoc({}, 'a', 1, 'b', 22)" , { "a" : 1, "b" : 22 });
+b("assoc,2","f.pipe({}, f.assoc('a', 1, 'b', 2))" , { "a" : 1, "b" : 2 });
 
 const nbNPassed = asserts.filter(x=>!x.testPassed).length;
 const nbPassed = asserts.filter(x=>x.testPassed).length;

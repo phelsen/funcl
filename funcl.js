@@ -30,14 +30,20 @@ const  ___eqAtoms = (a,b) => {
 
 
 const ___eqPrimitiveMaps = (m1,m2) => {
+    debugger ;
     const keys1 = Object.keys(m1);
     const vals1 = Object.values(m1);
-    const keys2 = Object.keys(m1);
-    const vals2 = Object.values(m1);
+    const keys2 = Object.keys(m2);
+    const vals2 = Object.values(m2);
     const arrEq = ___eqPrimitiveArrays.bind(this);
     const uniq = ___uniqShallow;
-    return arrEq(uniq(keys1),uniq(keys2)) &&
-	arrEq(uniq(vals1),uniq(vals2));
+    return ___eqSets(uniq(keys1),uniq(keys2)) &&
+	___eqSets(uniq(vals1),uniq(vals2));
+}
+
+const ___eqSets = (s1,s2) => {
+    return ___eqPrimitiveArrays(sort(s1), sort(s2))
+
 }
 
 
@@ -94,6 +100,8 @@ const ___mapKeepCollections = (map) => {
     });
     return out;
 }
+
+
 
 const pre = (x,msgCode) => {
     if (x) {
@@ -371,7 +379,7 @@ const sortBy = (fn,coll) =>  {
 
 
 const getIn = (m,ks,notFound) => getIn__(clone(m),ks,notFound); 
-const  sort = (coll) => coll.sort();
+const sort = (coll) => coll.sort();
 
 const toExport = {
     sortBy,
