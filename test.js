@@ -5,7 +5,7 @@ const {getIn, array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, c
 const cl = console.log;
 const assert =  (test, v, expected,codeString) => 
       ({ test : test,
-	 v : v ,
+	 result : v ,
 	 expected : expected,
 	 codeString : codeString,
 	 testPassed : f.eq(v,expected)     })
@@ -179,6 +179,11 @@ b("nth,1", "f.nth(f.range(10),2)",2);
 b("nth,3","{ try {  f.nth([1,2,3],10) } catch(e) {    e.message}}","Out of index")
 b("assoc,1","f.assoc({}, 'a', 1, 'b', 22)" , { "a" : 1, "b" : 22 });
 b("assoc,2","f.pipe({}, f.assoc('a', 1, 'b', 2))" , { "a" : 1, "b" : 2 });
+b("toggle,1","f.toggle([1,2,3],4)", [1,2,3,4]);
+b("toggle,2","f.toggle([1,2,3,4],4)", [1,2,3]);
+b("toggle,4","f.pipe([1],f.toggle(2))", [1,2]);
+b("toggle,5","f.pipe([1],f.toggle(2),f.toggle(3))", [1,2,3]);
+b("toggle,6","f.pipe([1],f.toggle(2),f.toggle(3),f.toggle(2))", [1,3]);
 
 const nbNPassed = asserts.filter(x=>!x.testPassed).length;
 const nbPassed = asserts.filter(x=>x.testPassed).length;
@@ -221,8 +226,7 @@ if (node_p) {
 	console.log(asserts.filter(x=>!x.testPassed));
 	console.log("Tests *DID NOT*  Pass!"); 
         console.log(`Nb Failed : ${nbNPassed}`);
-        console.log(`Nb Tottal : ${asserts.length}`);
-
+        console.log(`Nb Total : ${asserts.length}`);
     }
 }
 

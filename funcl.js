@@ -13,7 +13,21 @@ const end  = ()  => {
     delete window.___funcl_start__;
 }
 
+const ___INLINE_addOrRemove =  (arr, value) =>  {
+    if (!array_p(arr)) {
+	debugger;
+	console.log("---->>>>",arr,value);
+    }
+	var index = arr.indexOf(value);
+	if (index === -1) {
+            arr.push(value);
+	} else {
+            arr.splice(index, 1);
+	}
+}
+
 const  ___eqAtoms = (a,b) => {
+    
     if (type(a)!=type(b)) {
 	return false;
     }
@@ -25,6 +39,7 @@ const  ___eqAtoms = (a,b) => {
     if (regexp_p(a)) {
 	return a.toString() === b.toString();
     }
+    
     return a === b;
 }
 
@@ -43,8 +58,8 @@ const ___eqPrimitiveMaps = (m1,m2) => {
 
 const ___eqSets = (s1,s2) => {
     return ___eqPrimitiveArrays(sort(s1), sort(s2))
-
 }
+
 
 
 const ___eqPrimitiveArrays = (a,b) =>  { 
@@ -222,7 +237,13 @@ const assoc = (coll,...kvs) => {
     return c;
 }
 
-
+// set
+const toggle = (coll,el) => {
+    if (!el)  { return partialR(toggle,coll) }
+    const clonedSet = clone(coll); 
+    ___INLINE_addOrRemove(clonedSet,el);
+    return clonedSet; 
+}
 
 const first = coll => array_p(coll) ? coll[0] : map_2mapEntries(coll)[0];
 const last = coll =>  array_p(coll) ?  coll[coll.length-1] : last(map_2mapEntries(coll))
@@ -231,8 +252,12 @@ const nth = (coll,n) =>  n ? (pre(count(coll)>=n,"outofindex") && array_p(coll) 
 
 const drop = (n,coll) => coll ? (n <= 0 ? coll : coll.slice(n)) : c2 => partial(drop,n)(c2)
 const take = (n,coll) => coll ?  coll.slice(0,n) : c2 => partial(take,n) (c2)
-const takeLast = (n,coll) => coll.slice(-n)
+
+const takeLast = (n,coll) =>  coll ? coll.slice(-n) : c2 => partial(takeLast,n)(c2)
 const takeWhile = (pred, coll) => {
+    if (!coll) {
+	return partial(takeWhile,pred)
+    }
     const ret = [];
     for (let el of coll) if (pred(el))  { ret.push(el); }  else break;
     return ret;
@@ -430,6 +455,7 @@ const toExport = {
     take,
     takeLast,
     takeWhile,
+    toggle,
     type,
     undefined_p,
     upperCase,

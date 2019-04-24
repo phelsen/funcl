@@ -48,6 +48,25 @@ npm install funcl
 npm run test
 \`\`\`
 
+## Understand it
+
+The main goal of this library is to make programming in javascript easier,more fun and less error-prone. Not to mimic clojure 100%. 
+Although an effort has been/will be made to stay close to the clojure api : this library will always choose pragmatism over 'puritanism'. 
+FunCl is not supporting lazy collections, nor will it try to copy the behaviour of macro's. 
+At the other side, functions that seem convenient will be added even though clojure might not offer them. 
+
+As an example of the effort towards pragmatism : in this library most functions that lack some of their argumenst will return the partial function that makes most sense. 
+That way the very convenient pipe() function can do its magic kinda intuitively. 
+
+
+\`\`\`javascript
+pipe(range(100),drop(80),reverse,takeWhile(x => x>90),filter(odd_p),map(inc))
+=>${JSON.stringify(pipe(range(100),drop(80),reverse,takeWhile(x => x>90),filter(odd_p),map(inc)))}
+\`\`\`
+
+More rationale and examples will follow shortly. 
+
+
 ## Do it (some quick examples)
 
 `
