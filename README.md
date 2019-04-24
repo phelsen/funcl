@@ -12,13 +12,13 @@ You can install the latest release via npm:
 npm install funcl
 ```
 
-## test it 
+## Test it 
 
 ```shell
 npm run test
 ```
 
-## some quick examples 
+## Do it (some quick examples)
 
 |||
 |--- |--- |
