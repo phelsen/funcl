@@ -1,0 +1,29 @@
+{
+  "author": {
+    "name": "phelsen@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/phelsen/funcl/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "\"Some javascript util functions that sure as hell will ring a clojure bell!\"",
+  "homepage": "https://github.com/phelsen/funcl#readme",
+    "keywords": [
+	"javascript",
+	"utilities",
+	"clojure",
+	"functional"
+  ],
+  "license": "MIT",
+  "main": "funcl.min.js",
+  "name": "funcl",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phelsen/funcl.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.11"
+}
