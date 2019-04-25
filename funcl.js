@@ -245,8 +245,9 @@ const toggle = (coll,el) => {
     return clonedSet; 
 }
 
-const first = coll => array_p(coll) ? coll[0] : map_2mapEntries(coll)[0];
-const last = coll =>  array_p(coll) ?  coll[coll.length-1] : last(map_2mapEntries(coll))
+const first = coll => array_p(coll) ? coll[0] : string_p(coll) ?  coll.charAt(0) :  map_2mapEntries(coll)[0];
+const second = coll => array_p(coll) ? coll[1] : string_p(coll) ?  coll.charAt(1) :  map_2mapEntries(coll)[1];
+const last = coll =>  array_p(coll) ?  coll[coll.length-1] : string_p(coll) ? coll.charAt(coll.length-1) :  last(map_2mapEntries(coll))
 const rest = (coll) => coll.slice(1)
 const nth = (coll,n) =>  n ? (pre(count(coll)>=n,"outofindex") && array_p(coll) ? coll[n] : nth(map_2mapEntries(coll),n)) :  c2 => partialR(nth,coll)(c2)
 
@@ -448,6 +449,7 @@ const toExport = {
     reverse,
     regexp_p,
     rest,
+    second,
     sort,
     start,
     string_p,
