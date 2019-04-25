@@ -34,13 +34,24 @@ let fileText = `# FunCl
 
 Some javascript util functions that sure as hell ring a clojure bell!
 
+https://phelsen.github.io/funcl/
+
 ## Get it 
 
 You can install the latest release via npm:
 
 \`\`\`shell
-npm install funcl
+npm i -S funcl
 \`\`\`
+
+and use it with Node or a bundler like webpack or browserify  : 
+
+\`\`\`javascript
+f = require('funcl');
+// or 
+import f from  'funcl'; 
+\`\`\`
+
 
 ## Test it 
 
@@ -64,11 +75,11 @@ pipe(range(100),drop(80),reverse,takeWhile(x => x>90),filter(odd_p),map(inc))
 =>${JSON.stringify(pipe(range(100),drop(80),reverse,takeWhile(x => x>90),filter(odd_p),map(inc)))}
 \`\`\`
 
-More rationale and examples will follow shortly. 
+
+API documentation is a work in progress :  https://phelsen.github.io/funcl/
 
 
 ## Do it (some quick examples)
-
 `
 
 fileText += "|||\n";

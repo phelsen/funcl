@@ -34,11 +34,11 @@ pipe(range(100),drop(80),reverse,takeWhile(x => x>90),filter(odd_p),map(inc))
 =>[100,98,96,94,92]
 ```
 
-More rationale and examples will follow shortly. 
+
+API documentation is a work in progress :  https://phelsen.github.io/funcl/
 
 
 ## Do it (some quick examples)
-
 |||
 |--- |--- |
 |range(10);|[0,1,2,3,4,5,6,7,8,9]|
