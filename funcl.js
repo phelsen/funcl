@@ -144,7 +144,7 @@ const neg_p = x => pre(number_p(x),"nb") &&  x < 0
 const pos_p = x => pre(number_p(x),"nb") && x > 0 
 const zero_p = x => pre(number_p(x),"nb") && x === 0  
 const number_p = x => typeof x === "number" 
-const odd_p =  x => pre(number_p(x),"nb") && x % 2 === 1 
+const odd_p =  x => pre(number_p(x),"nb") && x % 2 !== 0
 const regexp_p =  x => x instanceof RegExp 
 const string_p =  x => typeof x === "string" 
 const undefined_p =  x => typeof x ==="undefined"
@@ -226,7 +226,9 @@ const upperCase = x => x.toUpperCase()
 const lowerCase = x => x.toLowerCase()
 const inc = x => x+1  
 const dec = x => x-1
-const sqr = x => x * x 
+const sqr = x => x * x
+const sum = (...coll) => !array_p(coll[0]) ? coll.reduce((x,y)=>x+y) : sum(...coll[0]); 
+const multipleOf_p = (x,y) => y ?  x % y == 0  : partialR(multipleOf_p,x);
 const assoc = (coll,...kvs) => {
     if (!map_p(coll)) {
 	return partialR(assoc,coll,...kvs)    }
@@ -248,7 +250,7 @@ const toggle = (coll,el) => {
 const first = coll => array_p(coll) ? coll[0] : string_p(coll) ?  coll.charAt(0) :  map_2mapEntries(coll)[0];
 const second = coll => array_p(coll) ? coll[1] : string_p(coll) ?  coll.charAt(1) :  map_2mapEntries(coll)[1];
 const last = coll =>  array_p(coll) ?  coll[coll.length-1] : string_p(coll) ? coll.charAt(coll.length-1) :  last(map_2mapEntries(coll))
-const rest = (coll) => coll.slice(1)
+const rest = (coll) => array_p(coll) ? coll.slice(1) : string_p(coll) ?  coll.substr(1,coll.length) :  rest(map_2mapEntries(coll))
 const nth = (coll,n) =>  n ? (pre(count(coll)>=n,"outofindex") && array_p(coll) ? coll[n] : nth(map_2mapEntries(coll),n)) :  c2 => partialR(nth,coll)(c2)
 
 const drop = (n,coll) => coll ? (n <= 0 ? coll : coll.slice(n)) : c2 => partial(drop,n)(c2)
@@ -404,9 +406,18 @@ const sortBy = (fn,coll) =>  {
 }
 
 
+const isAllOf = (...p) => x => p.reduce((p1,p2) => p1(x) && p2(x))
+const isSomeOf = (...p) => x => p.reduce((p1,p2) => p1(x) || p2(x))
+
 const getIn = (m,ks,notFound) => getIn__(clone(m),ks,notFound); 
 const sort = (coll) => coll.sort();
 
+const set = arr => [...new Set(arr)];
+const intersection = (...s) =>  count(s)==1 ? partialR(intersection,s[0]) :  [...s.reduce((e1,e2) => e1.filter(x => new Set(e2).has(x)))];
+const union = (...s) =>  count(s)==1 ?  partialR(union,s[0]) :  set(s.reduce((e1,e2) => concat([...e1],[...e2])));
+const difference  = (...s) => count(s)==1 ? partialR(difference,s[0]) :   [...s.reduce((e1,e2) => e1.filter(x => !(new Set(e2).has(x))))];
+
+const isMultipleOf = multipleOf_p; 
 const toExport = {
     sortBy,
     array_p,
@@ -424,18 +435,23 @@ const toExport = {
     drop,
     end,
     even_p,
+    isAllOf,
+    isSomeOf,
     eq,
     filter,
     first,
     function_p,
     getIn,
     inc,
+//    isEvery,
+    isMultipleOf,
     last,
     lowerCase,
     map,
     mapEntries_2map,
     map_p,
     map_2mapEntries,
+    multipleOf_p,
     neg_p,
     nth,
     number_p,

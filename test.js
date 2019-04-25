@@ -26,7 +26,11 @@ b("second,3",  "f.second({ a : 1, b : 2})", ["b",2]) ;
 b("last,1", "f.last([1,2,3])",3);
 b("last,2", "f.last('Barfoo')",'o');
 b("last,3",  "f.last({ a : 1, b : 2})", ["b",2]) ;
-
+b("rest,1", "f.rest([1,2,3])",[2,3]);
+b("rest,2", "f.rest('Barfoo')",'arfoo');
+b("rest,3",  "f.rest({ a : 1, b : 2, c : 3})", [["b",2],["c",3]]) ;
+b("rest,4",  "f.rest({})", []);
+b("rest,5",  "f.rest([])", []);
 b("partial,1", "sumOf4(10,20,30,33)",93);
 b("partial,2", "f.partial(sumOf4,10)(10,20,30)",70);
 b("partial,3", "f.partial(sumOf4,10)(20,30,100)",160);
@@ -194,6 +198,7 @@ b("toggle,2","f.toggle([1,2,3,4],4)", [1,2,3]);
 b("toggle,4","f.pipe([1],f.toggle(2))", [1,2]);
 b("toggle,5","f.pipe([1],f.toggle(2),f.toggle(3))", [1,2,3]);
 b("toggle,6","f.pipe([1],f.toggle(2),f.toggle(3),f.toggle(2))", [1,3]);
+//b("set,1", 
 
 const nbNPassed = asserts.filter(x=>!x.testPassed).length;
 const nbPassed = asserts.filter(x=>x.testPassed).length;
