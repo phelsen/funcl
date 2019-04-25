@@ -16,7 +16,17 @@ const sumOf4 = (w,x,y,z) => w + x + y + z;
 const a = (test,v,expected) => asserts.push(assert(test,v,expected));
 const b = (test,v,expected) => asserts.push(assert(test,eval(v),expected,v)); 
 
-//;; partials 
+//;; partials
+b("first,1", "f.first([1,2,3])",1);
+b("first,2", "f.first('Barfoo')",'B');
+b("first,3",  "f.first({ a : 1, b : 2})", ["a",1]) ;
+b("second,1", "f.second([1,2,3])",2);
+b("second,2", "f.second('Barfoo')",'a');
+b("second,3",  "f.second({ a : 1, b : 2})", ["b",2]) ;
+b("last,1", "f.last([1,2,3])",3);
+b("last,2", "f.last('Barfoo')",'o');
+b("last,3",  "f.last({ a : 1, b : 2})", ["b",2]) ;
+
 b("partial,1", "sumOf4(10,20,30,33)",93);
 b("partial,2", "f.partial(sumOf4,10)(10,20,30)",70);
 b("partial,3", "f.partial(sumOf4,10)(20,30,100)",160);
