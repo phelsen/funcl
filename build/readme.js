@@ -8,7 +8,7 @@ const {getIn, array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, c
 
 const r = [];
 let arr; let dict; let dict2;
-r.push ("range(10);");
+r.push("everything=range(1e4); life=pipe(range(1,50),filter(isMultipleOf(6))); theUniverse=filter(isMultipleOf(7),range(1e4)); intersection(life,theUniverse,everything)")
 r.push("arr=range(1,11); arr");
 r.push("count(arr)"); 
 r.push("reverse(arr)");
@@ -19,6 +19,7 @@ r.push("rest(arr)");
 r.push("takeWhile(x => x < 5, arr)");
 r.push("takeLast(3, arr)");
 r.push("map(sqr,arr)");
+r.push("partition(2,interleave([1,2,3],[4,5,6]))");
 r.push("pipe(arr,map(sqr),reverse,map(x=>x+100),filter(odd_p))");
 r.push("dict=assoc({}, 'fn' , 'Bar' , 'ln', 'Foo')")
 r.push("map(type, [arr,dict,11,true,{},[],new Date(),/funcl/])")

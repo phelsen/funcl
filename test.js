@@ -1,5 +1,5 @@
 const f = require("./funcl.js");
-const {getIn, array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, countable_p, date_p, defined_p,  dec, drop, eq, even_p, filter, first, function_p, inc, last, lowerCase, map, mapEntries_2map, map_p, map_2mapEntries, neg_p, nth, number_p, odd_p, partial, partialR, pipe, pos_p, range, reduce, reverse, regexp_p, rest, string_p, sqr, take, takeLast, takeWhile, type, undefined_p, upperCase, zero_p} = f; 
+const {getIn, isArray, assoc, isAtom, isBoolean, clone, isColl, concat, count, isCountable, isDate, isDefined,  isUndefined, dec, drop, eq, isEven, filter, first, isFunction, inc, last, lowerCase, map, mapEntries_2map, isMap, map_2mapEntries, isNeg, nth, isNumber, isOdd, partial, partialR, pipe, isPos, range, reduce, reverse, isRegexp, rest, isString, sqr, take, takeLast, takeWhile, type,  upperCase, isZero} = f; 
 
 
 const cl = console.log;
@@ -39,28 +39,28 @@ b("a partial test","f.partial(sumOf4,1,2,3)(4)",10);
 b("a partial test","f.partial(sumOf4,1,2)(3,4)",10);
 b("a partial test","f.partial(sumOf4,1,2,3)(4)",10);
 b("a partial test","f.partial(sumOf4,1,2,3,4)()",10);
-b("array?,1","f.array_p([1,2,3])",true);
-b("array?,2","f.array_p([])",true);
-b("array?,3","f.array_p(1)",false);
-b("array?,4","f.array_p(null)",false);
-b("array?,5","f.array_p()",false);
-b("string?, 1","f.string_p('jos')", true);
-b("string?, 2","f.string_p('')", true);
-b("string?, 3","f.string_p()", false);
-b("string?, 4","f.string_p(null)", false);
-b("string?, 5","f.string_p(false)", false);
-b("string?, 6","f.string_p(1)", false);
-b("map?,1", "f.map_p({})",true);
-b("map?,2", "f.map_p({a: 1, b: 2})",true);
-b("map?,3", "f.map_p([1,2,3])",false);
-b("map?,4", "f.map_p('funcl')",false);
-b("map?,5", "f.map_p(new Boolean())",false);
-b("map?,6", "f.map_p(true)",false);
-b("map?,7", "f.map_p(/regex/)",false);
-b("map?,8", "f.map_p(new Date())",false);
-b("map?,9", "f.map_p([])",false);
-b("map?,10", "f.map_p('')",false);
-b("map?,11", "f.map_p()",false);
+b("array?,1","f.isArray([1,2,3])",true);
+b("array?,2","f.isArray([])",true);
+b("array?,3","f.isArray(1)",false);
+b("array?,4","f.isArray(null)",false);
+b("array?,5","f.isArray()",false);
+b("string?, 1","f.isString('jos')", true);
+b("string?, 2","f.isString('')", true);
+b("string?, 3","f.isString()", false);
+b("string?, 4","f.isString(null)", false);
+b("string?, 5","f.isString(false)", false);
+b("string?, 6","f.isString(1)", false);
+b("map?,1", "f.isMap({})",true);
+b("map?,2", "f.isMap({a: 1, b: 2})",true);
+b("map?,3", "f.isMap([1,2,3])",false);
+b("map?,4", "f.isMap('funcl')",false);
+b("map?,5", "f.isMap(new Boolean())",false);
+b("map?,6", "f.isMap(true)",false);
+b("map?,7", "f.isMap(/regex/)",false);
+b("map?,8", "f.isMap(new Date())",false);
+b("map?,9", "f.isMap([])",false);
+b("map?,10", "f.isMap('')",false);
+b("map?,11", "f.isMap()",false);
 // equality
 b("eq1", "f.eq(1,1)",true);
 b("eq2", "f.eq(0,0)",true);
@@ -89,93 +89,93 @@ b("eq23", "f.eq([/jojoj/,{ a : 12, b : 12, c: 12 , d : [9,9,new Date('2019')] },
 b("eq24", "f.eq([/jojoj/,{ a : 12, b : 12, c: 12 , d : [9,9,new Date('2019')] },[{ a : [[]]}]], [ /jojoj/ ,{ b: 12 , a:12, c : 12, d : [9, 9, new Date('2019')]}, [{ a : [[[]]]} ]])",false);
 b("eq25", "f.eq({ a: 12, b: 99}, { 'b' : 99, a : 12 })",true);
 b("eq25", "f.eq({ a: 12, b: 2}, { 'a' :12, b : 22 })",false);
-b("atom?,1","f.atom_p(1)",true);
-b("atom?,2","f.atom_p(0)",true);
-b("atom?,3","f.atom_p()",false);
-b("atom?,4","f.atom_p('')",true);
-b("atom?,5","f.atom_p('Some string')",true);
-b("atom?,6","f.atom_p(new Date())",true);
-b("atom?,7","f.atom_p(new RegExp())",true);
-b("atom?,8","f.atom_p([1,2,3])",false);
-b("atom?,9","f.atom_p([])",false);
-b("atom?,10","f.atom_p({})",false);
-b("atom?,11","f.atom_p({a :  12})",false);
-b("boolean?,1","f.boolean_p (true)", true)
-b("boolean?,2","f.boolean_p (false)", true)
-b("boolean?,3","f.boolean_p ()", false)
-b("boolean?,4","f.boolean_p (2 == 2 )",true)
-b("coll?,1", "f.coll_p([])",true)
-b("coll?,2", "f.coll_p({})",true)
-b("coll?,3", "f.coll_p()",false)
-b("coll?,4", "f.coll_p([1,2,3])",true)
-b("coll?,5", "f.coll_p([1,{a : 99},2,3])",true)
-b("coll?,6", "f.coll_p({ a : 1 })",true)
-b("coll?,7", "f.coll_p(null)",false)
-b("date?,1", "f.date_p(null)", false)
-b("date?,2", "f.date_p(new Date())", true)
-b("date?,3", "f.date_p(new Date('2019'))", true)
-b("date?,4", "f.date_p(new Object())", false)
-b("even?,1", "f.even_p(2)", true)
-b("even?,2", "f.even_p(3)", false)
-b("even?,3", "f.even_p(0)", true)
-b("odd?,1", "f.odd_p(2)", false)
-b("odd?,2", "f.odd_p(3)", true)
-b("odd?,3", "f.odd_p(0)", false)
-b("odd?,4", "(x => { try {  f.even_p('jjo') } catch(e) { return   e.message} })()"  , "Function expected numeric input")
-b("fn?,1" , "f.function_p(x => x)", true);
-b("fn?,2", "f.function_p()", false);
-b("fn?,3", "f.function_p(new Object())", false)
-b("fn?,4", "f.function_p(null)", false)
-b("fn?,5", "f.function_p(f.odd_p)", true)
-b("fn?,6", "f.function_p(function(x) {})", true)
-b("fn?,7", "f.function_p([].map)", true)
+b("atom?,1","f.isAtom(1)",true);
+b("atom?,2","f.isAtom(0)",true);
+b("atom?,3","f.isAtom()",false);
+b("atom?,4","f.isAtom('')",true);
+b("atom?,5","f.isAtom('Some string')",true);
+b("atom?,6","f.isAtom(new Date())",true);
+b("atom?,7","f.isAtom(new RegExp())",true);
+b("atom?,8","f.isAtom([1,2,3])",false);
+b("atom?,9","f.isAtom([])",false);
+b("atom?,10","f.isAtom({})",false);
+b("atom?,11","f.isAtom({a :  12})",false);
+b("boolean?,1","f.isBoolean (true)", true)
+b("boolean?,2","f.isBoolean (false)", true)
+b("boolean?,3","f.isBoolean ()", false)
+b("boolean?,4","f.isBoolean (2 == 2 )",true)
+b("coll?,1", "f.isColl([])",true)
+b("coll?,2", "f.isColl({})",true)
+b("coll?,3", "f.isColl()",false)
+b("coll?,4", "f.isColl([1,2,3])",true)
+b("coll?,5", "f.isColl([1,{a : 99},2,3])",true)
+b("coll?,6", "f.isColl({ a : 1 })",true)
+b("coll?,7", "f.isColl(null)",false)
+b("date?,1", "f.isDate(null)", false)
+b("date?,2", "f.isDate(new Date())", true)
+b("date?,3", "f.isDate(new Date('2019'))", true)
+b("date?,4", "f.isDate(new Object())", false)
+b("even?,1", "f.isEven(2)", true)
+b("even?,2", "f.isEven(3)", false)
+b("even?,3", "f.isEven(0)", true)
+b("odd?,1", "f.isOdd(2)", false)
+b("odd?,2", "f.isOdd(3)", true)
+b("odd?,3", "f.isOdd(0)", false)
+b("odd?,4", "(x => { try {  f.isEven('jjo') } catch(e) { return   e.message} })()"  , "Function expected numeric input")
+b("fn?,1" , "f.isFunction(x => x)", true);
+b("fn?,2", "f.isFunction()", false);
+b("fn?,3", "f.isFunction(new Object())", false)
+b("fn?,4", "f.isFunction(null)", false)
+b("fn?,5", "f.isFunction(f.isOdd)", true)
+b("fn?,6", "f.isFunction(function(x) {})", true)
+b("fn?,7", "f.isFunction([].map)", true)
 //type
 // ["array", "string", "map", "regexp", "boolean", "undefined", "function", "null"];
 b("type1", "f.eq(f.map(f.type.bind(f),[[],'',{},/e/,true,undefined,x=>x,null]),['array', 'string', 'map', 'regexp', 'boolean', 'undefined', 'function', 'null'])",true);
 b("type2", "f.eq(f.map(f.type.bind(f),[[1,2,3],'jos',{a: 12 }]),['array', 'string', 'map'])",true);
-b("neg?,1","f.neg_p(0)",false)
-b("neg?,2","f.neg_p(1)",false)
-b("neg?,3","f.neg_p(-1)",true)
-b("neg?,4", "{ try {  f.neg_p('jjo') } catch(e) { e.message} }"  , "Function expected numeric input")
-b("pos?,1","f.pos_p(0)",false)
-b("pos?,2","f.pos_p(1)",true)
-b("pos?,3","f.pos_p(-1)",false)
-b("pos?,4", "{ try {  f.pos_p('jjo') } catch(e) { e.message} }"  , "Function expected numeric input")
-b("zero?,1","f.zero_p(0)",true)
-b("zero?,2","f.zero_p(1)",false)
-b("zero?,3","f.zero_p(-1)",false)
-b("zero?,4", "{ try {  f.zero_p('') } catch(e) {   e.message} }"  , "Function expected numeric input")
-b("number_p?,1", "f.number_p(0)",true)
-b("number_p?,2", "f.number_p(1e9)",true)
-b("number_p?,3", "f.number_p(-89)",true)
-b("number_p?,4", "f.number_p('2')",false)
-b("number_p?,5", "f.number_p('')",false)
-b("number_p?,6", "f.number_p(/1/)",false)
-b("number_p?,7", "f.number_p()",false)
-b("regexp_p?,1", "f.regexp_p()",false)
-b("regexp_p?,2", "f.regexp_p('/jso/')",false)
-b("regexp_p?,3", "f.regexp_p(/e/)",true)
-b("regexp_p?,1", "f.regexp_p(/\\//)",true)
-b("regexp_p?,2", "f.undefined_p()",true)
-b("regexp_p?,3", "f.undefined_p(undefined)",true)
-b("regexp_p?,4", "f.undefined_p(null)",false)
-b("regexp_p?,5", "f.undefined_p(false)",false)
+b("neg?,1","f.isNeg(0)",false)
+b("neg?,2","f.isNeg(1)",false)
+b("neg?,3","f.isNeg(-1)",true)
+b("neg?,4", "{ try {  f.isNeg('jjo') } catch(e) { e.message} }"  , "Function expected numeric input")
+b("pos?,1","f.isPos(0)",false)
+b("pos?,2","f.isPos(1)",true)
+b("pos?,3","f.isPos(-1)",false)
+b("pos?,4", "{ try {  f.isPos('jjo') } catch(e) { e.message} }"  , "Function expected numeric input")
+b("zero?,1","f.isZero(0)",true)
+b("zero?,2","f.isZero(1)",false)
+b("zero?,3","f.isZero(-1)",false)
+b("zero?,4", "{ try {  f.isZero('') } catch(e) {   e.message} }"  , "Function expected numeric input")
+b("number?,1", "f.isNumber(0)",true)
+b("number?,2", "f.isNumber(1e9)",true)
+b("number?,3", "f.isNumber(-89)",true)
+b("number?,4", "f.isNumber('2')",false)
+b("number?,5", "f.isNumber('')",false)
+b("number?,6", "f.isNumber(/1/)",false)
+b("number?,7", "f.isNumber()",false)
+b("isRegexp?,1", "f.isRegexp()",false)
+b("isRegexp?,2", "f.isRegexp('/jso/')",false)
+b("isRegexp?,3", "f.isRegexp(/e/)",true)
+b("isRegexp?,1", "f.isRegexp(/\\//)",true)
+b("isRegexp?,2", "f.isUndefined()",true)
+b("isRegexp?,3", "f.isUndefined(undefined)",true)
+b("isRegexp?,4", "f.isUndefined(null)",false)
+b("isRegexp?,5", "f.isUndefined(false)",false)
 b("count,1", "f.count('skfd')",4)
 b("count,2", "f.count([1,2,3,4])",4)
 b("count,3", "f.count([])",0)
 b("count,4", "f.count({ a: 12 , b: 8, c: [1,2,3,4]})",3)
 b("count,5", "{ try {  f.count(new Date()) } catch(e) { e.message} }" , "Trying to count something not countable")
-b("countable,1", "f.countable_p(new Date())",false)
+b("countable,1", "f.isCountable(new Date())",false)
 b("map,1",  "f.eq(f.map(f.inc, [1,2,3]),[2,3,4])",true);
 b("mappipe,1", "f.eq(f.pipe([1,2,3,4],f.map(f.inc),f.map(x=>2*x)),[4,6,8,10])",true);
-b("filter,1", "f.eq(f.filter(f.odd_p, [1,2,3,4,5,6]),[1,3,5])",true);
-b("filter,2", "f.eq(f.filter(f.even_p,[1,2,3,4,5,6]),[2,4,6])",true);
+b("filter,1", "f.eq(f.filter(f.isOdd, [1,2,3,4,5,6]),[1,3,5])",true);
+b("filter,2", "f.eq(f.filter(f.isEven,[1,2,3,4,5,6]),[2,4,6])",true);
 b("filter,3", "f.eq(f.filter(x => x > 4, [1,2,3,4,5,6]),[5,6])",true);
 // fixme : next 2 assume order in map
 b("map_2mapEntries,1", "f.eq(f.map_2mapEntries({ a: 1, b: 2, c: 3}), [['a',1],['b',2],['c',3]])",true)
 b("map_2mapEntries,1", "f.eq( f.map_2mapEntries({}), [])",true)
 //clone
-b("date_clone?", "f.date_p(f.clone(new Date()))",true)
+b("date_clone?", "f.isDate(f.clone(new Date()))",true)
 //reduce
 b("reduce,1", "f.reduce((x,y)=>x, [1,2,3,4])",1);
 b("reduce,2", "f.reduce((x,y)=>y, [1,2,3,4])",4);
@@ -186,7 +186,7 @@ b("reduce,5","f.eq(f.reduce((x,y)=>y, {a : 1 , b : 2, c : 3, d : 4}),[ 'd' , 4])
 b("take,1", "f.take(3,f.range(10))",[0,1,2])
 b("take,2", "f.take(3,f.range(1))",[0])
 b("take in pipe, 1", "f.pipe([1,2,3],take(2))", [1,2])
-b("take in pipe, 2", "f.pipe(range(1,11),map(sqr),filter(odd_p),reverse,take(4),take(2))", [81,49])
+b("take in pipe, 2", "f.pipe(range(1,11),map(sqr),filter(isOdd),reverse,take(4),take(2))", [81,49])
 b("drop,1", "f.drop(3,f.range(10))",[3,4,5,6,7,8,9])
 b("drop,2", "f.drop(3,f.range(1))",[])
 b("nth,1", "f.nth(f.range(10),2)",2);
@@ -198,6 +198,14 @@ b("toggle,2","f.toggle([1,2,3,4],4)", [1,2,3]);
 b("toggle,4","f.pipe([1],f.toggle(2))", [1,2]);
 b("toggle,5","f.pipe([1],f.toggle(2),f.toggle(3))", [1,2,3]);
 b("toggle,6","f.pipe([1],f.toggle(2),f.toggle(3),f.toggle(2))", [1,3]);
+b("eqSet,1", "f.eqSets([1,2,3],[1,2,3])",true)
+b("eqSet,2", "f.eqSets([1,2],[1,2,3])",false)
+b("eqSet,3", "f.eqSets([3,2,1],[1,2,3])",true)
+b("eqSet,3", "f.eqSets([{ a : 12 },2,1],[1,2,{ a : 12}])",true)
+b("test42","everything=f.range(1e4); life=f.pipe(f.range(1,50),f.filter(f.isMultipleOf(6))); theUniverse=filter(f.isMultipleOf(7),f.range(1e4)); f.intersection(life,theUniverse,everything)",[42]);
+b("partion/inter" , "f.partition(2,f.interleave([1,2,3],[4,5,6]))",[[1,4],[2,5],[3,6]])
+
+
 //b("set,1", 
 
 const nbNPassed = asserts.filter(x=>!x.testPassed).length;

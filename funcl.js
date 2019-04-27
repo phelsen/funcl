@@ -14,7 +14,7 @@ const end  = ()  => {
 }
 
 const ___INLINE_addOrRemove =  (arr, value) =>  {
-    if (!array_p(arr)) {
+    if (!isArray(arr)) {
 	debugger;
 	console.log("---->>>>",arr,value);
     }
@@ -32,11 +32,11 @@ const  ___eqAtoms = (a,b) => {
 	return false;
     }
 
-    if (date_p(a)) {
+    if (isDate(a)) {
 	return a.getTime()===b.getTime()
     }
 
-    if (regexp_p(a)) {
+    if (isRegexp(a)) {
 	return a.toString() === b.toString();
     }
     
@@ -52,31 +52,38 @@ const ___eqPrimitiveMaps = (m1,m2) => {
     const vals2 = Object.values(m2);
     const arrEq = ___eqPrimitiveArrays.bind(this);
     const uniq = ___uniqShallow;
-    return ___eqSets(uniq(keys1),uniq(keys2)) &&
-	___eqSets(uniq(vals1),uniq(vals2));
+    return eqSets(uniq(keys1),uniq(keys2)) &&
+	eqSets(uniq(vals1),uniq(vals2));
 }
 
-const ___eqSets = (s1,s2) => {
-    return ___eqPrimitiveArrays(sort(s1), sort(s2))
-}
 
+const __partitionHelp = (n, a) =>  a.length ? [a.splice(0, n)].concat(__partitionHelp(n,a)) : [];
+// to mimic clojure behaviour : a partition that isn't full lenght doesn't get returned 
+const partition = (n,a) => {  const r1 = __partitionHelp(n,clone(a));  return r1[r1.length-1].length == r1[0].length ? r1 : r1.slice(0,-1) }
+// todo : signature to (...a)
+const interleave = (a1, a2) => a1.reduce((ret, el, i) => ret.concat(el, a2[i]), []);  // wip : (...arr)
+
+
+const eqSets = (s1,s2) => {
+    return ___eqPrimitiveArrays(sort(s1), sort(s2));
+}
 
 
 const ___eqPrimitiveArrays = (a,b) =>  { 
     let counter = 0;
-    if (!(array_p(a)) || !(array_p(b))) {
+    if (!(isArray(a)) || !(isArray(b))) {
 	return false;
     }
     if (a.length != b.length) {
 	return false;
     }
     for (let i = 0; i < a.length; i++) {
-	if (atom_p(a[i])) {
+	if (isAtom(a[i])) {
 	    if (!___eqAtoms(a[i],b[i])) {
 		return false;
 	    }
 	}
-	if (!(atom_p(a[i])) && (type(a[i]) != type(b[i]))) {
+	if (!(isAtom(a[i])) && (type(a[i]) != type(b[i]))) {
 	    return false;
 	}
 
@@ -98,7 +105,7 @@ const ___mapKeepPrimitives = (map) => {
     const out = {};
     const keys_ = Object.keys(map);
     keys_.forEach(k => {
-	if (atom_p(map[k])) {
+	if (isAtom(map[k])) {
 	    out[k] = map[k];
 	}
     });
@@ -109,7 +116,7 @@ const ___mapKeepCollections = (map) => {
     const out = {};
     const keys_ = Object.keys(map);
     keys_.forEach(k => {
-	if (!atom_p(map[k])) {
+	if (!isAtom(map[k])) {
 	    out[k] = map[k];
 	}
     });
@@ -126,39 +133,39 @@ const pre = (x,msgCode) => {
     throw err;
 }
 
-const array_p =  x  => Array.isArray(x)
-const atom_p = x => typeof x != "undefined" &&  (x !== Object(x) || x instanceof Date || x instanceof Boolean || x instanceof RegExp) 
-const boolean_p = x =>  typeof x === "boolean" 
-const coll_p = x => (array_p(x) || map_p(x))  
-const countable_p = x => (string_p(x) || coll_p(x));
-const date_p = x => x instanceof Date
-const even_p = x =>  pre(number_p(x),"nb") && x % 2 === 0  
-const function_p =  x => typeof x === "function" 
-const map_p =  x => typeof x === 'object' && x !==null 
+const isArray =  x  => Array.isArray(x)
+const isAtom = x => typeof x != "undefined" &&  (x !== Object(x) || x instanceof Date || x instanceof Boolean || x instanceof RegExp) 
+const isBoolean = x =>  typeof x === "boolean" 
+const isColl = x => (isArray(x) || isMap(x))  
+const isCountable = x => (isString(x) || isColl(x));
+const isDate = x => x instanceof Date
+const isEven = x =>  pre(isNumber(x),"nb") && x % 2 === 0  
+const isFunction =  x => typeof x === "function" 
+const isMap =  x => typeof x === 'object' && x !==null 
       && !Array.isArray(x)
       && Object.keys(x).length === Object.values(x).length
       && !(x instanceof RegExp)
       && !(x instanceof Boolean)
       && !(x instanceof Date)
-const neg_p = x => pre(number_p(x),"nb") &&  x < 0  
-const pos_p = x => pre(number_p(x),"nb") && x > 0 
-const zero_p = x => pre(number_p(x),"nb") && x === 0  
-const number_p = x => typeof x === "number" 
-const odd_p =  x => pre(number_p(x),"nb") && x % 2 !== 0
-const regexp_p =  x => x instanceof RegExp 
-const string_p =  x => typeof x === "string" 
-const undefined_p =  x => typeof x ==="undefined"
-const defined_p = x => typeof x !=="undefined"
+const isNeg = x => pre(isNumber(x),"nb") &&  x < 0  
+const isPos = x => pre(isNumber(x),"nb") && x > 0 
+const isZero = x => pre(isNumber(x),"nb") && x === 0  
+const isNumber = x => typeof x === "number" 
+const isOdd =  x => pre(isNumber(x),"nb") && x % 2 !== 0
+const isRegexp =  x => x instanceof RegExp 
+const isString =  x => typeof x === "string" 
+const isUndefined =  x => typeof x ==="undefined"
+const isDefined = x => typeof x !=="undefined"
 
-const type = (x) =>  array_p(x)  ?  "array"
-      : string_p(x) ? "string"
-      : number_p(x) ? "number"
-      : map_p(x)  ? "map"
+const type = (x) =>  isArray(x)  ?  "array"
+      : isString(x) ? "string"
+      : isNumber(x) ? "number"
+      : isMap(x)  ? "map"
       : x instanceof RegExp ? "regexp"
       : x instanceof Boolean ? "boolean"
       : x instanceof Date ? "date"
-      : undefined_p(x) ?  "undefined"
-      : function_p(x) ? "function"
+      : isUndefined(x) ?  "undefined"
+      : isFunction(x) ? "function"
       : x === null ? "null"
       : typeof x;
 
@@ -168,13 +175,13 @@ const eq = (a,b) =>  {
 	return false;
     }
 
-    if (atom_p(a)) {
+    if (isAtom(a)) {
 	return ___eqAtoms(a,b);
     }
 
     const arrEq = ___eqPrimitiveArrays;
 
-    if (array_p(a)) {
+    if (isArray(a)) {
 	const topEqual = arrEq(a,b);
 	if (!topEqual) return false;
 	let  childsEqual = true;
@@ -186,7 +193,7 @@ const eq = (a,b) =>  {
 
     }
 
-    if (map_p(a)) {
+    if (isMap(a)) {
 	const keysA = Object.keys(a);
 	const keysB = Object.keys(b);
 	if (keysA.length !== keysB.length) {
@@ -227,10 +234,10 @@ const lowerCase = x => x.toLowerCase()
 const inc = x => x+1  
 const dec = x => x-1
 const sqr = x => x * x
-const sum = (...coll) => !array_p(coll[0]) ? coll.reduce((x,y)=>x+y) : sum(...coll[0]); 
-const multipleOf_p = (x,y) => y ?  x % y == 0  : partialR(multipleOf_p,x);
+const sum = (...coll) => !isArray(coll[0]) ? coll.reduce((x,y)=>x+y) : sum(...coll[0]); 
+const isMultipleOf = (x,y) => y ?  x % y == 0  : partialR(isMultipleOf,x);
 const assoc = (coll,...kvs) => {
-    if (!map_p(coll)) {
+    if (!isMap(coll)) {
 	return partialR(assoc,coll,...kvs)    }
     const c = clone(coll);
     for(let i=0; i<kvs.length; i += 2) {
@@ -247,11 +254,11 @@ const toggle = (coll,el) => {
     return clonedSet; 
 }
 
-const first = coll => array_p(coll) ? coll[0] : string_p(coll) ?  coll.charAt(0) :  map_2mapEntries(coll)[0];
-const second = coll => array_p(coll) ? coll[1] : string_p(coll) ?  coll.charAt(1) :  map_2mapEntries(coll)[1];
-const last = coll =>  array_p(coll) ?  coll[coll.length-1] : string_p(coll) ? coll.charAt(coll.length-1) :  last(map_2mapEntries(coll))
-const rest = (coll) => array_p(coll) ? coll.slice(1) : string_p(coll) ?  coll.substr(1,coll.length) :  rest(map_2mapEntries(coll))
-const nth = (coll,n) =>  n ? (pre(count(coll)>=n,"outofindex") && array_p(coll) ? coll[n] : nth(map_2mapEntries(coll),n)) :  c2 => partialR(nth,coll)(c2)
+const first = coll => isArray(coll) ? coll[0] : isString(coll) ?  coll.charAt(0) :  map_2mapEntries(coll)[0];
+const second = coll => isArray(coll) ? coll[1] : isString(coll) ?  coll.charAt(1) :  map_2mapEntries(coll)[1];
+const last = coll =>  isArray(coll) ?  coll[coll.length-1] : isString(coll) ? coll.charAt(coll.length-1) :  last(map_2mapEntries(coll))
+const rest = (coll) => isArray(coll) ? coll.slice(1) : isString(coll) ?  coll.substr(1,coll.length) :  rest(map_2mapEntries(coll))
+const nth = (coll,n) =>  n ? (pre(count(coll)>=n,"outofindex") && isArray(coll) ? coll[n] : nth(map_2mapEntries(coll),n)) :  c2 => partialR(nth,coll)(c2)
 
 const drop = (n,coll) => coll ? (n <= 0 ? coll : coll.slice(n)) : c2 => partial(drop,n)(c2)
 const take = (n,coll) => coll ?  coll.slice(0,n) : c2 => partial(take,n) (c2)
@@ -267,9 +274,9 @@ const takeWhile = (pred, coll) => {
 }
 
 const  count = (coll) => {
-    pre(countable_p(coll), "countable"); 
-     return Array.isArray(coll) || string_p(coll)  ? coll.length
-	: map_p(coll) ? Object.keys(coll).length : false
+    pre(isCountable(coll), "countable"); 
+     return Array.isArray(coll) || isString(coll)  ? coll.length
+	: isMap(coll) ? Object.keys(coll).length : false
 }
 
 const partial = (f,...args) => {
@@ -290,15 +297,15 @@ const map = (f,coll) => {
     };
 
 
-    if (array_p(coll)) {
+    if (isArray(coll)) {
 	return coll.map(x => f(x));
     };
 
-    if (string_p(coll)) {
+    if (isString(coll)) {
 	return coll.split("").map(f)
     }
 
-    return  function_p(f) && coll_p(coll)
+    return  isFunction(f) && isColl(coll)
 	?   Object.keys(coll).map(
 	    k => {
 		const v = coll[k];
@@ -306,7 +313,7 @@ const map = (f,coll) => {
 	    })
 	: new Error(`'map' expects (function, collection)`)
 }
-const concat = (...x)=> array_p(first(x))  ? [].concat(...x) : Object.assign({},...x)
+const concat = (...x)=> isArray(first(x))  ? [].concat(...x) : Object.assign({},...x)
 const map_2mapEntries =  m => map(x => [x[0],x[1]],m)
 const mapEntries_2map =  mes => Object.assign({}, ...mes.map(me =>  ({ [me[0]] : me[1] })))
 
@@ -317,11 +324,11 @@ const filter = (f,coll) => {
 	return partial(filter,f);
     };
 
-    if (array_p(coll)) {
+    if (isArray(coll)) {
 	return coll.filter(x => f(x));
     };
 
-    return  function_p(f) && coll_p(coll)
+    return  isFunction(f) && isColl(coll)
 	?   Object.keys(coll).filter(
 	    k => {
 		const v = coll[k];
@@ -335,11 +342,11 @@ const reduce = (f,coll) => {
 	return partial(reduce,f);
     };
 
-    if (array_p(coll)) {
+    if (isArray(coll)) {
 	return coll.reduce(f);
     };
 
-    return  function_p(f) && map_p(coll)
+    return  isFunction(f) && isMap(coll)
 	? map_2mapEntries(coll).reduce(
 	    (me1,me2)  => {
 		const res = f(me1,me2);
@@ -358,7 +365,7 @@ const  range = (x,y,step) => {
 }
 
 const  cloneAtom = (el) =>  {
-    if (date_p(el)) {
+    if (isDate(el)) {
 	return new Date(el);
     }
     return el;
@@ -366,17 +373,17 @@ const  cloneAtom = (el) =>  {
 
 
 const clone = (el) =>  {
-    if (atom_p(el)) {
+    if (isAtom(el)) {
 	return  cloneAtom(el);
     }
 
-    if (array_p(el)) {
+    if (isArray(el)) {
 	const arr = [];
 	el.forEach(x => arr.push(clone(x))) ;
 	return arr;
     }
 
-    if (map_p(el)) {
+    if (isMap(el)) {
 	const obj = {}
 	Object.keys(el).forEach( k => { obj[k] = clone(el[k]); });
 	return obj;
@@ -394,9 +401,9 @@ const reverse =  coll =>   Array.isArray (coll) ?  clone(coll).reverse () : coll
 
 
 const getIn__ =  (m, ks, notFound) => {
-	const notFoundFn  = _ => undefined_p(notFound) ? null : notFound; 
+	const notFoundFn  = _ => isUndefined(notFound) ? null : notFound; 
     return ks.reduce((obj, key) =>
-			 (defined_p(obj) && defined_p(obj[key]))
+			 (isDefined(obj) && isDefined(obj[key]))
 			      ? obj[key]
 			      : notFoundFn(), m);
     }
@@ -417,67 +424,70 @@ const intersection = (...s) =>  count(s)==1 ? partialR(intersection,s[0]) :  [..
 const union = (...s) =>  count(s)==1 ?  partialR(union,s[0]) :  set(s.reduce((e1,e2) => concat([...e1],[...e2])));
 const difference  = (...s) => count(s)==1 ? partialR(difference,s[0]) :   [...s.reduce((e1,e2) => e1.filter(x => !(new Set(e2).has(x))))];
 
-const isMultipleOf = multipleOf_p; 
 const toExport = {
-    sortBy,
-    array_p,
     assoc,
-    atom_p,
-    boolean_p,
     clone,
-    coll_p,
     concat,
     count,
-    countable_p,
-    date_p,
     dec,
-    defined_p,
+    difference,
     drop,
     end,
-    even_p,
-    isAllOf,
-    isSomeOf,
     eq,
+    eqSets,
     filter,
     first,
-    function_p,
     getIn,
     inc,
-//    isEvery,
+    interleave,
+    intersection,
+    isAllOf,
+    isArray,
+    isAtom,
+    isBoolean,
+    isColl,
+    isCountable,
+    isDate,
+    isDefined,
+    isEven,
+    isFunction,
+    isMap,
     isMultipleOf,
+    isNeg,
+    isNumber,
+    isOdd,
+    isPos,
+    isRegexp,
+    isSomeOf,
+    isString,
+    isZero,
     last,
     lowerCase,
     map,
     mapEntries_2map,
-    map_p,
     map_2mapEntries,
-    multipleOf_p,
-    neg_p,
     nth,
-    number_p,
-    odd_p,
     partial,
     partialR,
+    partition, 
     pipe,
-    pos_p,
     range,
     reduce,
-    reverse,
-    regexp_p,
     rest,
+    reverse,
     second,
     sort,
-    start,
-    string_p,
+    sortBy,
     sqr,
+    start,
     take,
     takeLast,
     takeWhile,
     toggle,
     type,
-    undefined_p,
+    union,
+    isUndefined,
     upperCase,
-    zero_p
 }
 
 module.exports = toExport; 
