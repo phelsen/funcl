@@ -61,9 +61,10 @@ const __partitionHelp = (n, a) =>  a.length ? [a.splice(0, n)].concat(__partitio
 // to mimic clojure behaviour : a partition that isn't full lenght doesn't get returned 
 const partition = (n,a) => {  const r1 = __partitionHelp(n,clone(a));  return r1[r1.length-1].length == r1[0].length ? r1 : r1.slice(0,-1) }
 // todo : signature to (...a)
-const interleave = (a1, a2) => a1.reduce((ret, el, i) => ret.concat(el, a2[i]), []);  // wip : (...arr)
-
-
+const interleave = (a1, a2) => { const [b1,b2] = [a1.slice(0,a2.length),a2.slice(0,a1.length)];
+				 return b1.reduce((ret, el, i) => ret.concat(el, b2[i]), []);
+			       }
+				 
 const eqSets = (s1,s2) => {
     return ___eqPrimitiveArrays(sort(s1), sort(s2));
 }
