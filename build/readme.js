@@ -36,6 +36,9 @@ Some javascript util functions that sure as hell ring a clojure bell!
 
 https://phelsen.github.io/funcl/
 
+NOTE: funcl is still in alpha phase.
+(However : functions that allready have an exact clojure signature will continue to do so)
+
 ## Get it 
 
 You can install the latest release via npm:
