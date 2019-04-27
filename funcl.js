@@ -298,6 +298,7 @@ const map = (f,coll) => {
 
 
     if (isArray(coll)) {
+
 	return coll.map(x => f(x));
     };
 
@@ -320,7 +321,7 @@ const mapEntries_2map =  mes => Object.assign({}, ...mes.map(me =>  ({ [me[0]] :
 
 const filter = (f,coll) => { 
 
-    if (!coll)  {
+    if (!isColl(coll))  {
 	return partial(filter,f);
     };
 

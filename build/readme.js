@@ -1,10 +1,7 @@
 const f = require("./../funcl.js");
 const fs = require('fs');
 
-
-const {getIn, array_p, assoc, atom_p, boolean_p, clone, coll_p, concat, count, countable_p, date_p, dec, drop, eq, even_p, filter, first, function_p, inc, last, lowerCase, map, mapEntries_2map, map_p, map_2mapEntries, neg_p, nth, number_p, odd_p, partial, partialR, pipe, pos_p, range, reduce, reverse, regexp_p, rest, string_p, sqr, takeLast, takeWhile, type, undefined_p, upperCase, zero_p} = f; 
-
-
+const {getIn, isArray, assoc, isAtom, isBoolean, clone, isColl, concat, count, isCountable, isDate, isDefined,  isUndefined, dec, drop, eq, isEven, filter, first, isFunction, inc, last, lowerCase, map, mapEntries_2map, isMap, map_2mapEntries, isNeg, nth, partition, interleave, intersection, isMultipleOf, isNumber, isOdd, partial, partialR, pipe, isPos, range, reduce, reverse, isRegexp, rest, isString, sqr, take, takeLast, takeWhile, type,  upperCase, isZero} = f; 
 
 const r = [];
 let arr; let dict; let dict2;
@@ -20,7 +17,7 @@ r.push("takeWhile(x => x < 5, arr)");
 r.push("takeLast(3, arr)");
 r.push("map(sqr,arr)");
 r.push("partition(2,interleave([1,2,3],[4,5,6]))");
-r.push("pipe(arr,map(sqr),reverse,map(x=>x+100),filter(odd_p))");
+r.push("pipe(arr,map(sqr),reverse,map(x=>x+100),filter(isOdd))");
 r.push("dict=assoc({}, 'fn' , 'Bar' , 'ln', 'Foo')")
 r.push("map(type, [arr,dict,11,true,{},[],new Date(),/funcl/])")
 r.push("dict=pipe(dict,assoc('ln', 'StillFoo', 'address',{ street : 'FunclStreet' , nb :  '12' }));");
@@ -75,8 +72,8 @@ That way the very convenient pipe() function can do its magic kinda intuitively.
 
 
 \`\`\`javascript
-pipe(range(100),drop(80),reverse,takeWhile(x => x>90),filter(odd_p),map(inc))
-=>${JSON.stringify(pipe(range(100),drop(80),reverse,takeWhile(x => x>90),filter(odd_p),map(inc)))}
+pipe(range(100),drop(80),reverse,takeWhile(x => x>90),filter(isOdd),map(inc))
+=>${JSON.stringify(pipe(range(100),drop(80),reverse,takeWhile(x => x>90),filter(isOdd),map(inc)))}
 \`\`\`
 
 

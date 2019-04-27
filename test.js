@@ -1,6 +1,4 @@
 const f = require("./funcl.js");
-const {getIn, isArray, assoc, isAtom, isBoolean, clone, isColl, concat, count, isCountable, isDate, isDefined,  isUndefined, dec, drop, eq, isEven, filter, first, isFunction, inc, last, lowerCase, map, mapEntries_2map, isMap, map_2mapEntries, isNeg, nth, isNumber, isOdd, partial, partialR, pipe, isPos, range, reduce, reverse, isRegexp, rest, isString, sqr, take, takeLast, takeWhile, type,  upperCase, isZero} = f; 
-
 
 const cl = console.log;
 const assert =  (test, v, expected,codeString) => 
@@ -185,8 +183,8 @@ b("reduce,5","f.eq(f.reduce((x,y)=>y, {a : 1 , b : 2, c : 3, d : 4}),[ 'd' , 4])
 //take
 b("take,1", "f.take(3,f.range(10))",[0,1,2])
 b("take,2", "f.take(3,f.range(1))",[0])
-b("take in pipe, 1", "f.pipe([1,2,3],take(2))", [1,2])
-b("take in pipe, 2", "f.pipe(range(1,11),map(sqr),filter(isOdd),reverse,take(4),take(2))", [81,49])
+b("take in pipe, 1", "f.pipe([1,2,3],f.take(2))", [1,2])
+b("take in pipe, 2", "f.pipe(f.range(1,11),f.map(f.sqr),f.filter(f.isOdd),f.reverse,f.take(4),f.take(2))", [81,49])
 b("drop,1", "f.drop(3,f.range(10))",[3,4,5,6,7,8,9])
 b("drop,2", "f.drop(3,f.range(1))",[])
 b("nth,1", "f.nth(f.range(10),2)",2);
@@ -202,9 +200,9 @@ b("eqSet,1", "f.eqSets([1,2,3],[1,2,3])",true)
 b("eqSet,2", "f.eqSets([1,2],[1,2,3])",false)
 b("eqSet,3", "f.eqSets([3,2,1],[1,2,3])",true)
 b("eqSet,3", "f.eqSets([{ a : 12 },2,1],[1,2,{ a : 12}])",true)
-b("test42","everything=f.range(1e4); life=f.pipe(f.range(1,50),f.filter(f.isMultipleOf(6))); theUniverse=filter(f.isMultipleOf(7),f.range(1e4)); f.intersection(life,theUniverse,everything)",[42]);
+b("test42","everything=f.range(1e4); life=f.pipe(f.range(1,50),f.filter(f.isMultipleOf(6))); theUniverse=f.filter(f.isMultipleOf(7),f.range(1e4)); f.intersection(life,theUniverse,everything)",[42]);
 b("partion/inter" , "f.partition(2,f.interleave([1,2,3],[4,5,6]))",[[1,4],[2,5],[3,6]])
-
+b("takeWhile,1", "f.pipe(f.range(100),f.drop(80),f.reverse,f.takeWhile(x => x>90),f.filter(f.isOdd),f.map(f.inc))",[ 100, 98, 96, 94, 92 ])
 
 //b("set,1", 
 
