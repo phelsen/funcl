@@ -14,6 +14,7 @@ const sumOf4 = (w,x,y,z) => w + x + y + z;
 const a = (test,v,expected) => asserts.push(assert(test,v,expected));
 const b = (test,v,expected) => asserts.push(assert(test,eval(v),expected,v)); 
 
+const start = f.start();
 //;; partials
 b("first,1", "f.first([1,2,3])",1);
 b("first,2", "f.first('Barfoo')",'B');
@@ -118,8 +119,8 @@ b("even?,2", "f.isEven(3)", false)
 b("even?,3", "f.isEven(0)", true)
 b("odd?,1", "f.isOdd(2)", false)
 b("odd?,2", "f.isOdd(3)", true)
-b("odd?,3", "f.isOdd(0)", false)
-b("odd?,4", "(x => { try {  f.isEven('jjo') } catch(e) { return   e.message} })()"  , "Function expected numeric input")
+b("odd?,3", "f.isOdd(0)", false)                                                     
+b("odd?,4", "(x => { try {  f.isEven('jjo') } catch(e) { return   e.message} })()"  ,f.errMsg.ERR_NOT_NUMERIC)
 b("fn?,1" , "f.isFunction(x => x)", true);
 b("fn?,2", "f.isFunction()", false);
 b("fn?,3", "f.isFunction(new Object())", false)
@@ -162,16 +163,14 @@ b("count,1", "f.count('skfd')",4)
 b("count,2", "f.count([1,2,3,4])",4)
 b("count,3", "f.count([])",0)
 b("count,4", "f.count({ a: 12 , b: 8, c: [1,2,3,4]})",3)
-b("count,5", "{ try {  f.count(new Date()) } catch(e) { e.message} }" , "Trying to count something not countable")
+b("count,5", "{ try {  f.count(new Date()) } catch(e) { e.message} }" , f.errMsg.ERR_NOT_SEQ)
 b("countable,1", "f.isCountable(new Date())",false)
 b("map,1",  "f.eq(f.map(f.inc, [1,2,3]),[2,3,4])",true);
 b("mappipe,1", "f.eq(f.pipe([1,2,3,4],f.map(f.inc),f.map(x=>2*x)),[4,6,8,10])",true);
 b("filter,1", "f.eq(f.filter(f.isOdd, [1,2,3,4,5,6]),[1,3,5])",true);
 b("filter,2", "f.eq(f.filter(f.isEven,[1,2,3,4,5,6]),[2,4,6])",true);
 b("filter,3", "f.eq(f.filter(x => x > 4, [1,2,3,4,5,6]),[5,6])",true);
-// fixme : next 2 assume order in map
-b("map_2mapEntries,1", "f.eq(f.map_2mapEntries({ a: 1, b: 2, c: 3}), [['a',1],['b',2],['c',3]])",true)
-b("map_2mapEntries,1", "f.eq( f.map_2mapEntries({}), [])",true)
+
 //clone
 b("date_clone?", "f.isDate(f.clone(new Date()))",true)
 //reduce
@@ -180,6 +179,9 @@ b("reduce,2", "f.reduce((x,y)=>y, [1,2,3,4])",4);
 b("reduce,3", "f.reduce((x,y)=>x+y, [1,2,3,4])",10);
 b("reduce,4","f.eq( f.reduce((x,y)=>x, {a : 1 , b : 2, c : 3, d : 4}),[ 'a' , 1])",true);
 b("reduce,5","f.eq(f.reduce((x,y)=>y, {a : 1 , b : 2, c : 3, d : 4}),[ 'd' , 4])",true);
+// reverse
+b("reverse,1", "f.reverse([1,2,3])",[3,2,1])
+b("reverse,2", "f.reverse('Barfoo')","oofraB")
 //take
 b("take,1", "f.take(3,f.range(10))",[0,1,2])
 b("take,2", "f.take(3,f.range(1))",[0])
@@ -203,16 +205,41 @@ b("eqSet,3", "f.eqSets([{ a : 12 },2,1],[1,2,{ a : 12}])",true)
 b("test42","everything=f.range(1e4); life=f.pipe(f.range(1,50),f.filter(f.isMultipleOf(6))); theUniverse=f.filter(f.isMultipleOf(7),f.range(1e4)); f.intersection(life,theUniverse,everything)",[42]);
 b("partion/inter" , "f.partition(2,f.interleave([1,2,3],[4,5,6]))",[[1,4],[2,5],[3,6]])
 b("takeWhile,1", "f.pipe(f.range(100),f.drop(80),f.reverse,f.takeWhile(x => x>90),f.filter(f.isOdd),f.map(f.inc))",[ 100, 98, 96, 94, 92 ])
+b("seqtest1", "f.seq([1,2,3,4])",[1,2,3,4])
+b("seqtest2", "f.seq({ a: 1 , b: 2 , c: 3 })",[['a',1],['b',2],['c',3]]);
+b("seqtest3", "{ try {  f.seq(1) } catch(e) { e.message} }", f.errMsg.ERR_NOT_SEQ)
+b("seqtest4", "f.seq({ a: 1 , b: 2 , c: 3 })",[['a',1],['b',2],['c',3]]);
+b("seqtest5", "f.seq({})",[]) // clj-diff
+b("euler1", "f.sum(f.filter(f.isAnyOf(f.isMultipleOf(3),f.isMultipleOf(5)),f.range(1e3)))", 233168)
+b("concat", "f.concat([1,2,3],[3,4],[5,6])", [1,2,3,3,4,5,6])
+b("concat", "f.concat('bar', 'foo', 'yo')", "barfooyo")
+b("concat", "f.concat('bar', 'foo', 'yo', [1,2,3])", "barfooyo123")
+b("concat", "f.concat([1,2,3],'bar','foo','yoo')", [1,2,3,'bar','foo','yoo'])
 
-//b("set,1", 
+const end = f.end();
 
 const nbNPassed = asserts.filter(x=>!x.testPassed).length;
 const nbPassed = asserts.filter(x=>x.testPassed).length;
 const ok =  nbPassed == asserts.length;
 
-
+const nbInfo = `${asserts.length} asserts have run in ${end} ms.`
 const passed = '<h1>' +  (ok ? "Tests Passed!" : "Tests DID NOT pass") + '</h1>';
 const node_p = (typeof window === 'undefined')
+
+if (node_p) {
+    console.log(nbInfo); 
+    if (ok) {
+
+	console.log(`${asserts.length} tests Passed!`); 
+    }   else {
+	console.log(asserts.filter(x=>!x.testPassed));
+	console.log("Tests *DID NOT*  Pass!"); 
+        console.log(`Nb Failed : ${nbNPassed}`);
+        console.log(`Nb Total : ${asserts.length}`);
+    }
+}
+
+
 if (!node_p) {
 
 
@@ -237,18 +264,6 @@ ${rows.join("")}
 </table>`; 
     document.querySelector("#main").innerHTML = tbl;
 
-}
-
-if (node_p) {
-    if (ok) {
-
-	console.log(`${asserts.length} tests Passed!`); 
-    }   else {
-	console.log(asserts.filter(x=>!x.testPassed));
-	console.log("Tests *DID NOT*  Pass!"); 
-        console.log(`Nb Failed : ${nbNPassed}`);
-        console.log(`Nb Total : ${asserts.length}`);
-    }
 }
 
 

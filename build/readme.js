@@ -1,11 +1,14 @@
 const f = require("./../funcl.js");
 const fs = require('fs');
 
-const {getIn, isArray, assoc, isAtom, isBoolean, clone, isColl, concat, count, isCountable, isDate, isDefined,  isUndefined, dec, drop, eq, isEven, filter, first, isFunction, inc, last, lowerCase, map, mapEntries_2map, isMap, map_2mapEntries, isNeg, nth, partition, interleave, intersection, isMultipleOf, isNumber, isOdd, partial, partialR, pipe, isPos, range, reduce, reverse, isRegexp, rest, isString, sqr, take, takeLast, takeWhile, type,  upperCase, isZero} = f; 
+const {getIn, isArray, assoc, isAtom, isBoolean, clone, isColl, concat, count, isCountable, isDate, isDefined,  isUndefined, dec, drop, eq, isEven, filter, first, isFunction, inc, last, lowerCase, map, mapEntries_2map, isMap, map_2mapEntries, isNeg, nth, partition, interleave, intersection, isMultipleOf, isNumber, isOdd, partial, partialR, pipe, isPos, range, reduce, reverse, isRegexp, rest, isString, sqr, sum,  take, takeLast, takeWhile, type,  upperCase, isZero, isAnyOf } = f; 
 
 const r = [];
 let arr; let dict; let dict2;
 r.push("everything=range(1e4); life=pipe(range(1,50),filter(isMultipleOf(6))); theUniverse=filter(isMultipleOf(7),range(1e4)); intersection(life,theUniverse,everything)")
+
+
+r.push("sum(filter(isAnyOf(isMultipleOf(3),isMultipleOf(5)),range(1e3))) // https://projecteuler.net/problem=1")
 r.push("arr=range(1,11); arr");
 r.push("count(arr)"); 
 r.push("reverse(arr)");
@@ -84,7 +87,7 @@ API documentation is a work in progress :  https://phelsen.github.io/funcl/
 `
 
 fileText += "|||\n";
-fileText += "|--- |--- |\n"; 
+fileText += "| Code | Result |\n"; 
 
 const rows =  map(x => `|${x}|${JSON.stringify(eval(x))}|`,r).join("\n");
 fileText +=   rows;

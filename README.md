@@ -54,20 +54,21 @@ API documentation is a work in progress :  https://phelsen.github.io/funcl/
 
 ## Do it (some quick examples)
 |||
-|--- |--- |
+| Code | Result |
 |everything=range(1e4); life=pipe(range(1,50),filter(isMultipleOf(6))); theUniverse=filter(isMultipleOf(7),range(1e4)); intersection(life,theUniverse,everything)|[42]|
+|sum(filter(isAnyOf(isMultipleOf(3),isMultipleOf(5)),range(1e3))) // https://projecteuler.net/problem=1|233168|
 |arr=range(1,11); arr|[1,2,3,4,5,6,7,8,9,10]|
 |count(arr)|10|
 |reverse(arr)|[10,9,8,7,6,5,4,3,2,1]|
 |count('λλ FUNCL! λλ') |12|
 |reverse('λλ FUNCL! λλ' )|"λλ !LCNUF λλ"|
-|[first(arr), last(arr)]|[1,10]|
-|rest(arr)|[2,3,4,5,6,7,8,9,10]|
-|takeWhile(x => x < 5, arr)|[1,2,3,4]|
-|takeLast(3, arr)|[8,9,10]|
-|map(sqr,arr)|[1,4,9,16,25,36,49,64,81,100]|
+|[first(arr), last(arr)]|[10,1]|
+|rest(arr)|[9,8,7,6,5,4,3,2,1]|
+|takeWhile(x => x < 5, arr)|[]|
+|takeLast(3, arr)|[3,2,1]|
+|map(sqr,arr)|[100,81,64,49,36,25,16,9,4,1]|
 |partition(2,interleave([1,2,3],[4,5,6]))|[[1,4],[2,5],[3,6]]|
-|pipe(arr,map(sqr),reverse,map(x=>x+100),filter(isOdd))|[181,149,125,109,101]|
+|pipe(arr,map(sqr),reverse,map(x=>x+100),filter(isOdd))|[101,109,125,149,181]|
 |dict=assoc({}, 'fn' , 'Bar' , 'ln', 'Foo')|{"fn":"Bar","ln":"Foo"}|
 |map(type, [arr,dict,11,true,{},[],new Date(),/funcl/])|["array","map","number","boolean","map","array","date","regexp"]|
 |dict=pipe(dict,assoc('ln', 'StillFoo', 'address',{ street : 'FunclStreet' , nb :  '12' }));|{"fn":"Bar","ln":"StillFoo","address":{"street":"FunclStreet","nb":"12"}}|

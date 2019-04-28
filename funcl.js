@@ -1,19 +1,34 @@
+/* 
+- consts
+- internals 
+- fundamentals
+clone, eq, partial, partialR, pipe
+- string
+toUpperCase, toLowerCase
+- math 
+isEven, isOdd, sqr, isMultipleOf, sum
+- seqs 
+ first, last, nth, seq , map, filter, reduce 
+- sets 
+difference, union, intersection
+*/
+
+// consts
+const _ERR_KEYS = { ERR_NOT_COUNTABLE  : "ERR_NOT_COUNTABLE",
+		    ERR_NOT_NUMERIC  : "ERR_NOT_NUMERIC", 
+		    ERR_OUT_OF_INDEX : "ERR_OUT_OF_INDEX",
+		    ERR_NOT_SEQ : "ERR_NOT_SEQ"
+		  } // no native shorthand support in chrome
 const errMsg = {
-    "countable" : "Trying to count something not countable",
-    "nb" : "Function expected numeric input",
-    "outofindex" : "Out of index"
+    "ERR_NOT_COUNTABLE" : "Trying to count something not countable",
+    "ERR_NOT_NUMERIC" : "Function expected numeric input",
+    "ERR_OUT_OF_INDEX" : "Out of index",
+    "ERR_NOT_SEQ" : "The given argument is not seqable"
 }
 
-const start = () =>  {
-    window.___funcl_start__ =  new Date().getTime();
-}
 
-const end  = ()  => {
-    console.log(new Date().getTime() -  window.___funcl_start__);
-    delete window.___funcl_start__;
-}
-
-const ___INLINE_addOrRemove =  (arr, value) =>  {
+// internals
+const _INLINE_addOrRemove =  (arr, value) =>  {
     if (!isArray(arr)) {
 	debugger;
 	console.log("---->>>>",arr,value);
@@ -26,7 +41,7 @@ const ___INLINE_addOrRemove =  (arr, value) =>  {
 	}
 }
 
-const  ___eqAtoms = (a,b) => {
+const  _eqAtoms = (a,b) => {
     
     if (type(a)!=type(b)) {
 	return false;
@@ -44,14 +59,14 @@ const  ___eqAtoms = (a,b) => {
 }
 
 
-const ___eqPrimitiveMaps = (m1,m2) => {
+const _eqPrimitiveMaps = (m1,m2) => {
     debugger ;
     const keys1 = Object.keys(m1);
     const vals1 = Object.values(m1);
     const keys2 = Object.keys(m2);
     const vals2 = Object.values(m2);
-    const arrEq = ___eqPrimitiveArrays.bind(this);
-    const uniq = ___uniqShallow;
+    const arrEq = _eqPrimitiveArrays.bind(this);
+    const uniq = _uniqShallow;
     return eqSets(uniq(keys1),uniq(keys2)) &&
 	eqSets(uniq(vals1),uniq(vals2));
 }
@@ -64,13 +79,28 @@ const partition = (n,a) => {  const r1 = __partitionHelp(n,clone(a));  return r1
 const interleave = (a1, a2) => { const [b1,b2] = [a1.slice(0,a2.length),a2.slice(0,a1.length)];
 				 return b1.reduce((ret, el, i) => ret.concat(el, b2[i]), []);
 			       }
-				 
-const eqSets = (s1,s2) => {
-    return ___eqPrimitiveArrays(sort(s1), sort(s2));
+
+
+
+//time
+const start = () =>  {
+    _funcl_start__ =  new Date().getTime();
+}
+
+const end  = ()  => {
+    const ts = new Date().getTime() - _funcl_start__;
+    delete _funcl_start__;
+    return ts; 
 }
 
 
-const ___eqPrimitiveArrays = (a,b) =>  { 
+				 
+const eqSets = (s1,s2) => {
+    return _eqPrimitiveArrays(sort(s1), sort(s2));
+}
+
+
+const _eqPrimitiveArrays = (a,b) =>  { 
     let counter = 0;
     if (!(isArray(a)) || !(isArray(b))) {
 	return false;
@@ -80,7 +110,7 @@ const ___eqPrimitiveArrays = (a,b) =>  {
     }
     for (let i = 0; i < a.length; i++) {
 	if (isAtom(a[i])) {
-	    if (!___eqAtoms(a[i],b[i])) {
+	    if (!_eqAtoms(a[i],b[i])) {
 		return false;
 	    }
 	}
@@ -92,7 +122,7 @@ const ___eqPrimitiveArrays = (a,b) =>  {
     return true;
 }
 
-const ___uniqShallow = (arr) => { 
+const _uniqShallow = (arr) => { 
     const out = [];
     for (let i=0; i<arr.length; i++) {
 	if (out.indexOf(arr[i])===-1) {
@@ -102,7 +132,7 @@ const ___uniqShallow = (arr) => {
     return out;
 }
 
-const ___mapKeepPrimitives = (map) => {
+const _mapKeepPrimitives = (map) => {
     const out = {};
     const keys_ = Object.keys(map);
     keys_.forEach(k => {
@@ -113,7 +143,7 @@ const ___mapKeepPrimitives = (map) => {
     return out;
 }
 
-const ___mapKeepCollections = (map) => {
+const _mapKeepCollections = (map) => {
     const out = {};
     const keys_ = Object.keys(map);
     keys_.forEach(k => {
@@ -134,13 +164,15 @@ const pre = (x,msgCode) => {
     throw err;
 }
 
+
+// type predicates
 const isArray =  x  => Array.isArray(x)
 const isAtom = x => typeof x != "undefined" &&  (x !== Object(x) || x instanceof Date || x instanceof Boolean || x instanceof RegExp) 
 const isBoolean = x =>  typeof x === "boolean" 
 const isColl = x => (isArray(x) || isMap(x))  
 const isCountable = x => (isString(x) || isColl(x));
 const isDate = x => x instanceof Date
-const isEven = x =>  pre(isNumber(x),"nb") && x % 2 === 0  
+const isEven = x =>  pre(isNumber(x),"ERR_NOT_NUMERIC") && x % 2 === 0  
 const isFunction =  x => typeof x === "function" 
 const isMap =  x => typeof x === 'object' && x !==null 
       && !Array.isArray(x)
@@ -148,16 +180,18 @@ const isMap =  x => typeof x === 'object' && x !==null
       && !(x instanceof RegExp)
       && !(x instanceof Boolean)
       && !(x instanceof Date)
-const isNeg = x => pre(isNumber(x),"nb") &&  x < 0  
-const isPos = x => pre(isNumber(x),"nb") && x > 0 
-const isZero = x => pre(isNumber(x),"nb") && x === 0  
+const isNeg = x => pre(isNumber(x),"ERR_NOT_NUMERIC") &&  x < 0  
+const isPos = x => pre(isNumber(x),"ERR_NOT_NUMERIC") && x > 0 
+const isZero = x => pre(isNumber(x),"ERR_NOT_NUMERIC") && x === 0  
 const isNumber = x => typeof x === "number" 
-const isOdd =  x => pre(isNumber(x),"nb") && x % 2 !== 0
+const isOdd =  x => pre(isNumber(x),"ERR_NOT_NUMERIC") && x % 2 !== 0
 const isRegexp =  x => x instanceof RegExp 
 const isString =  x => typeof x === "string" 
 const isUndefined =  x => typeof x ==="undefined"
 const isDefined = x => typeof x !=="undefined"
 
+
+// fundamentals
 const type = (x) =>  isArray(x)  ?  "array"
       : isString(x) ? "string"
       : isNumber(x) ? "number"
@@ -177,10 +211,10 @@ const eq = (a,b) =>  {
     }
 
     if (isAtom(a)) {
-	return ___eqAtoms(a,b);
+	return _eqAtoms(a,b);
     }
 
-    const arrEq = ___eqPrimitiveArrays;
+    const arrEq = _eqPrimitiveArrays;
 
     if (isArray(a)) {
 	const topEqual = arrEq(a,b);
@@ -202,15 +236,15 @@ const eq = (a,b) =>  {
 	}
 
 
-	const primitivesA = ___mapKeepPrimitives(a);
-	const primitivesB = ___mapKeepPrimitives(b);
+	const primitivesA = _mapKeepPrimitives(a);
+	const primitivesB = _mapKeepPrimitives(b);
 
-	if (!___eqPrimitiveMaps(primitivesA,primitivesB)) {
+	if (!_eqPrimitiveMaps(primitivesA,primitivesB)) {
 	    return false;
 	}
 
-	const nonPrimitivesA = ___mapKeepCollections(a);
-	const nonPrimitivesB = ___mapKeepCollections(b);
+	const nonPrimitivesA = _mapKeepCollections(a);
+	const nonPrimitivesB = _mapKeepCollections(b);
 
 	if (nonPrimitivesA.length==0 && nonPrimitivesB.length==0) {
 	    return true;
@@ -227,150 +261,6 @@ const eq = (a,b) =>  {
 	return true;
     }
 
-}
-
-
-const upperCase = x => x.toUpperCase()
-const lowerCase = x => x.toLowerCase()
-const inc = x => x+1  
-const dec = x => x-1
-const sqr = x => x * x
-const sum = (...coll) => !isArray(coll[0]) ? coll.reduce((x,y)=>x+y) : sum(...coll[0]); 
-const isMultipleOf = (x,y) => y ?  x % y == 0  : partialR(isMultipleOf,x);
-const assoc = (coll,...kvs) => {
-    if (!isMap(coll)) {
-	return partialR(assoc,coll,...kvs)    }
-    const c = clone(coll);
-    for(let i=0; i<kvs.length; i += 2) {
-	c[kvs[i]] = kvs[i+1];
-    }
-    return c;
-}
-
-// set
-const toggle = (coll,el) => {
-    if (!el)  { return partialR(toggle,coll) }
-    const clonedSet = clone(coll); 
-    ___INLINE_addOrRemove(clonedSet,el);
-    return clonedSet; 
-}
-
-const first = coll => isArray(coll) ? coll[0] : isString(coll) ?  coll.charAt(0) :  map_2mapEntries(coll)[0];
-const second = coll => isArray(coll) ? coll[1] : isString(coll) ?  coll.charAt(1) :  map_2mapEntries(coll)[1];
-const last = coll =>  isArray(coll) ?  coll[coll.length-1] : isString(coll) ? coll.charAt(coll.length-1) :  last(map_2mapEntries(coll))
-const rest = (coll) => isArray(coll) ? coll.slice(1) : isString(coll) ?  coll.substr(1,coll.length) :  rest(map_2mapEntries(coll))
-const nth = (coll,n) =>  n ? (pre(count(coll)>=n,"outofindex") && isArray(coll) ? coll[n] : nth(map_2mapEntries(coll),n)) :  c2 => partialR(nth,coll)(c2)
-
-const drop = (n,coll) => coll ? (n <= 0 ? coll : coll.slice(n)) : c2 => partial(drop,n)(c2)
-const take = (n,coll) => coll ?  coll.slice(0,n) : c2 => partial(take,n) (c2)
-
-const takeLast = (n,coll) =>  coll ? coll.slice(-n) : c2 => partial(takeLast,n)(c2)
-const takeWhile = (pred, coll) => {
-    if (!coll) {
-	return partial(takeWhile,pred)
-    }
-    const ret = [];
-    for (let el of coll) if (pred(el))  { ret.push(el); }  else break;
-    return ret;
-}
-
-const  count = (coll) => {
-    pre(isCountable(coll), "countable"); 
-     return Array.isArray(coll) || isString(coll)  ? coll.length
-	: isMap(coll) ? Object.keys(coll).length : false
-}
-
-const partial = (f,...args) => {
-    return f.bind(null,...args);
-}
-
-const  partialR = (fn, ...args) => {
-    return function(...args2) {
-	const newArgs = [].concat(args2,args);
-	return fn(...newArgs);
-    };
-}
-
-const map = (f,coll) => {
-    
-    if (!coll)  {
-	return partial(map,f);
-    };
-
-
-    if (isArray(coll)) {
-
-	return coll.map(x => f(x));
-    };
-
-    if (isString(coll)) {
-	return coll.split("").map(f)
-    }
-
-    return  isFunction(f) && isColl(coll)
-	?   Object.keys(coll).map(
-	    k => {
-		const v = coll[k];
-		return f([k,v])
-	    })
-	: new Error(`'map' expects (function, collection)`)
-}
-const concat = (...x)=> isArray(first(x))  ? [].concat(...x) : Object.assign({},...x)
-const map_2mapEntries =  m => map(x => [x[0],x[1]],m)
-const mapEntries_2map =  mes => Object.assign({}, ...mes.map(me =>  ({ [me[0]] : me[1] })))
-
-
-const filter = (f,coll) => { 
-
-    if (!isColl(coll))  {
-	return partial(filter,f);
-    };
-
-    if (isArray(coll)) {
-	return coll.filter(x => f(x));
-    };
-
-    return  isFunction(f) && isColl(coll)
-	?   Object.keys(coll).filter(
-	    k => {
-		const v = coll[k];
-		return f([k,v])
-	    })
-	: new Error(`'filter' expects (function, collection)`)
-}
-
-const reduce = (f,coll) => {
-    if (!coll)  {
-	return partial(reduce,f);
-    };
-
-    if (isArray(coll)) {
-	return coll.reduce(f);
-    };
-
-    return  isFunction(f) && isMap(coll)
-	? map_2mapEntries(coll).reduce(
-	    (me1,me2)  => {
-		const res = f(me1,me2);
-		return  res;
-	    })
-	: new Error(`'reduce' expects (function, collection)`)
-}
-
-
-const  range = (x,y,step) => {
-    return (x<0 || y <= x) ? [] :
-	!y ?  [...Array(x).keys()] :
-	!step
-	? [...Array(y-x).keys()].map(n => n +  x)
-	: new Error("step not supperted yet")
-}
-
-const  cloneAtom = (el) =>  {
-    if (isDate(el)) {
-	return new Date(el);
-    }
-    return el;
 }
 
 
@@ -393,17 +283,110 @@ const clone = (el) =>  {
 }
 
 
+
+
 const pipe = (el,...fns) => {  
     let curResult = el;
     fns.forEach(f =>   {curResult = f(curResult)});
     return curResult;
 }
 
-const reverse =  coll =>   Array.isArray (coll) ?  clone(coll).reverse () : coll.split("").reverse ().join("")
 
+const partial = (f,...args) => {
+    return f.bind(null,...args);
+}
+
+const  partialR = (fn, ...args) => {
+    return function(...args2) {
+	const newArgs = [].concat(args2,args);
+	return fn(...newArgs);
+    };
+}
+
+
+// strings 
+const upperCase = x => x.toUpperCase()
+const lowerCase = x => x.toLowerCase()
+const str = x => x.toString()
+
+// math
+const inc = x => x+1  
+const dec = x => x-1
+const sqr = x => x * x
+const sum = (...coll) => !isArray(coll[0]) ? coll.reduce((x,y)=>x+y) : sum(...coll[0]); 
+const isMultipleOf = (x,y) => y ?  x % y == 0  : partialR(isMultipleOf,x);
+const assoc = (coll,...kvs) => {
+    if (!isMap(coll)) {
+	return partialR(assoc,coll,...kvs)    }
+    const c = clone(coll);
+    for(let i=0; i<kvs.length; i += 2) {
+	c[kvs[i]] = kvs[i+1];
+    }
+    return c;
+}
+
+// set
+const toggle = (coll,el) => {
+    if (!el)  { return partialR(toggle,coll) }
+    const clonedSet = clone(coll); 
+    _INLINE_addOrRemove(clonedSet,el);
+    return clonedSet; 
+}
+
+
+// seqs
+const seq = coll => isArray(coll)  || isString(coll) ? coll
+      : isMap(coll) ?   Object.entries(coll)
+      : pre(false,_ERR_KEYS.ERR_NOT_SEQ)
+const first = coll =>  seq (coll) [0];
+const second = coll => seq (coll) [1]
+const last = coll =>  { const s = seq(coll); return s[s.length-1] }
+const rest = (coll) => seq (coll).slice(1)
+const nth = (coll,n) =>  n && pre(count(coll)>=n, _ERR_KEYS.ERR_OUT_OF_INDEX) ?  coll[n] :  c2 => partialR(nth,coll)(c2)
+const drop = (n,coll) => coll ? (n <= 0 ? seq (coll) : seq (coll).slice(n)) : c2 => partial(drop,n)(c2)
+const take = (n,coll) => coll ?   seq(coll).slice(0,n) : c2 => partial(take,n) (c2)
+const takeLast = (n,coll) =>  coll ? seq (coll).slice(-n) : c2 => partial(takeLast,n)(c2)
+const takeWhile = (pred, coll) => {
+    if (!coll) {
+	return partial(takeWhile,pred)
+    }
+    const ret = [];
+    for (let el of seq(coll)) if (pred(el))  { ret.push(el); }  else break;
+    return ret;
+}
+
+const  count = (coll) => {
+    pre(isCountable(seq(coll)), "ERR_NOT_COUNTABLE"); 
+     return Array.isArray(coll) || isString(coll)  ? coll.length
+	: isMap(coll) ? Object.keys(coll).length : false
+}
+const concat = (...x) => { const s = map(seq,x); const ret =  [].concat(...s); return isString(ret[0]) ? ret.join("") : ret;  }
+const mapEntries_2map =  mes => Object.assign({}, ...mes.map(me =>  ({ [me[0]] : me[1] })))
+
+const map  = (f,coll) =>  coll ?    seq(coll).map(x => f(x)) : partial(map,f);
+const filter  = (f,coll) =>  coll ?    seq(coll).filter(x => f(x)) : partial(filter,f);
+const reduce = (f,coll) =>  coll ? seq(coll).reduce(f) : partial(reduce,f)
+
+const  range = (x,y,step) => {
+    return (x<0 || y <= x) ? [] :
+	!y ?  [...Array(x).keys()] :
+	!step
+	? [...Array(y-x).keys()].map(n => n +  x)
+	: new Error("step not supperted yet")
+}
+
+const  cloneAtom = (el) =>  {
+    if (isDate(el)) {
+	return new Date(el);
+    }
+    return el;
+}
+
+
+const reverse =  coll => { const s = seq(coll);  return isArray(s) ? s.reverse() :  s.split("").reverse().join("") }
 
 const getIn__ =  (m, ks, notFound) => {
-	const notFoundFn  = _ => isUndefined(notFound) ? null : notFound; 
+    const notFoundFn  = _ => isUndefined(notFound) ? null : notFound; 
     return ks.reduce((obj, key) =>
 			 (isDefined(obj) && isDefined(obj[key]))
 			      ? obj[key]
@@ -416,7 +399,7 @@ const sortBy = (fn,coll) =>  {
 
 
 const isAllOf = (...p) => x => p.reduce((p1,p2) => p1(x) && p2(x))
-const isSomeOf = (...p) => x => p.reduce((p1,p2) => p1(x) || p2(x))
+const isAnyOf = (...p) => x => p.reduce((p1,p2) => p1(x) || p2(x))
 
 const getIn = (m,ks,notFound) => getIn__(clone(m),ks,notFound); 
 const sort = (coll) => coll.sort();
@@ -435,6 +418,7 @@ const toExport = {
     difference,
     drop,
     end,
+    errMsg,
     eq,
     eqSets,
     filter,
@@ -460,14 +444,13 @@ const toExport = {
     isOdd,
     isPos,
     isRegexp,
-    isSomeOf,
+    isAnyOf,
     isString,
     isZero,
     last,
     lowerCase,
     map,
     mapEntries_2map,
-    map_2mapEntries,
     nth,
     partial,
     partialR,
@@ -478,9 +461,11 @@ const toExport = {
     rest,
     reverse,
     second,
+    seq,
     sort,
     sortBy,
     sqr,
+    sum, 
     start,
     take,
     takeLast,
