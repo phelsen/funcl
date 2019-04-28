@@ -215,7 +215,8 @@ b("concat", "f.concat([1,2,3],[3,4],[5,6])", [1,2,3,3,4,5,6])
 b("concat", "f.concat('bar', 'foo', 'yo')", "barfooyo")
 b("concat", "f.concat('bar', 'foo', 'yo', [1,2,3])", "barfooyo123")
 b("concat", "f.concat([1,2,3],'bar','foo','yoo')", [1,2,3,'bar','foo','yoo'])
-
+b("conj", "f.conj([1,2,3],4,5)", [1,2,3,4,5])
+b("conj", "f.conj({  a : 12 , b : 22 },{c : 33} ,{ a :1 , d: 44})",  { a: 1, b : 22 , c: 33, d:44})
 const end = f.end();
 
 const nbNPassed = asserts.filter(x=>!x.testPassed).length;

@@ -86,9 +86,9 @@ API documentation is a work in progress :  https://phelsen.github.io/funcl/
 ## Do it (some quick examples)
 `
 
-fileText += "|||\n";
-fileText += "| Code | Result |\n"; 
 
+fileText += "| Code | Result |\n"; 
+fileText += "| --- | --- |\n";
 const rows =  map(x => `|${x}|${JSON.stringify(eval(x))}|`,r).join("\n");
 fileText +=   rows;
 console.log(fileText);

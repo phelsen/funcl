@@ -8,7 +8,7 @@ toUpperCase, toLowerCase
 - math 
 isEven, isOdd, sqr, isMultipleOf, sum
 - seqs 
- first, last, nth, seq , map, filter, reduce 
+conj, concat,  first, last, nth, seq , map, filter, reduce
 - sets 
 difference, union, intersection
 */
@@ -18,7 +18,7 @@ const _ERR_KEYS = { ERR_NOT_COUNTABLE  : "ERR_NOT_COUNTABLE",
 		    ERR_NOT_NUMERIC  : "ERR_NOT_NUMERIC", 
 		    ERR_OUT_OF_INDEX : "ERR_OUT_OF_INDEX",
 		    ERR_NOT_SEQ : "ERR_NOT_SEQ"
-		  } // no native shorthand support in chrome
+		  } 
 const errMsg = {
     "ERR_NOT_COUNTABLE" : "Trying to count something not countable",
     "ERR_NOT_NUMERIC" : "Function expected numeric input",
@@ -39,6 +39,12 @@ const _INLINE_addOrRemove =  (arr, value) =>  {
 	} else {
             arr.splice(index, 1);
 	}
+}
+
+const _map_2Object = (map) => {
+  const o = {};
+    map.forEach(function (k,v) {    o[k] = v;  });
+    return o;
 }
 
 const  _eqAtoms = (a,b) => {
@@ -283,8 +289,6 @@ const clone = (el) =>  {
 }
 
 
-
-
 const pipe = (el,...fns) => {  
     let curResult = el;
     fns.forEach(f =>   {curResult = f(curResult)});
@@ -360,6 +364,18 @@ const  count = (coll) => {
      return Array.isArray(coll) || isString(coll)  ? coll.length
 	: isMap(coll) ? Object.keys(coll).length : false
 }
+
+const conj =  (c,...el) => {
+    if (isMap(c))  {
+	const  cc = clone(c)
+	el.forEach(m => seq(m).forEach( kv => cc[kv[0]]=kv[1])) 
+	return cc;
+    }
+    if (isArray(c) || isString(c)) {
+	return concat(c,el)
+    }
+}
+			     
 const concat = (...x) => { const s = map(seq,x); const ret =  [].concat(...s); return isString(ret[0]) ? ret.join("") : ret;  }
 const mapEntries_2map =  mes => Object.assign({}, ...mes.map(me =>  ({ [me[0]] : me[1] })))
 
@@ -413,6 +429,7 @@ const toExport = {
     assoc,
     clone,
     concat,
+    conj,
     count,
     dec,
     difference,
