@@ -53,8 +53,8 @@ API documentation is a work in progress :  https://phelsen.github.io/funcl/
 
 
 ## Do it (some quick examples)
-|||
 | Code | Result |
+| --- | --- |
 |everything=range(1e4); life=pipe(range(1,50),filter(isMultipleOf(6))); theUniverse=filter(isMultipleOf(7),range(1e4)); intersection(life,theUniverse,everything)|[42]|
 |sum(filter(isAnyOf(isMultipleOf(3),isMultipleOf(5)),range(1e3))) // https://projecteuler.net/problem=1|233168|
 |arr=range(1,11); arr|[1,2,3,4,5,6,7,8,9,10]|
