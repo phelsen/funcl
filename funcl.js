@@ -1,12 +1,15 @@
+'use strict';
 /* 
 - consts
 - internals 
 - fundamentals
-clone, eq, partial, partialR, pipe
+conj, cons, clone, eq, partial, partialR, pipe
 - string
 toUpperCase, toLowerCase
 - math 
 isEven, isOdd, sqr, isMultipleOf, sum
+- maps
+merge
 - seqs 
 conj, concat,  first, last, nth, seq , map, filter, reduce
 - sets 
@@ -17,13 +20,15 @@ difference, union, intersection
 const _ERR_KEYS = { ERR_NOT_COUNTABLE  : "ERR_NOT_COUNTABLE",
 		    ERR_NOT_NUMERIC  : "ERR_NOT_NUMERIC", 
 		    ERR_OUT_OF_INDEX : "ERR_OUT_OF_INDEX",
-		    ERR_NOT_SEQ : "ERR_NOT_SEQ"
+		    ERR_NOT_SEQ : "ERR_NOT_SEQ",
+		    ERR_NOTIMPL : "ERR_NOTIMPL"
 		  } 
 const errMsg = {
     "ERR_NOT_COUNTABLE" : "Trying to count something not countable",
     "ERR_NOT_NUMERIC" : "Function expected numeric input",
     "ERR_OUT_OF_INDEX" : "Out of index",
-    "ERR_NOT_SEQ" : "The given argument is not seqable"
+    "ERR_NOT_SEQ" : "The given argument is not seqable",
+    "ERR_NOTIMPL" : "Not implemented (for this type)"
 }
 
 
@@ -86,16 +91,56 @@ const interleave = (a1, a2) => { const [b1,b2] = [a1.slice(0,a2.length),a2.slice
 				 return b1.reduce((ret, el, i) => ret.concat(el, b2[i]), []);
 			       }
 
+const cons =  (el,s) => {
+    const ar = clone(seq(s));
+    ar.unshift(el);
+    return ar; 
+}
 
+const identity = x => x
+
+const i = (...s) => {
+
+    if (s.length===0) {
+	return []
+    }
+    if (s.length===1) {
+	return seq(s);
+    }
+    if (s.length==2) {
+	const [s1,s2] = [seq(s[0]),seq(s[1])]
+
+	if (s1.length > 0 && s2.length > 0) {
+	    const ret = cons(first(s1),cons(first(s2),i( rest (s1) ,rest (s2))))
+
+	    return  ret;
+	} else { return []}
+    }
+    if (s.length > 2) {
+	const [s1,s2] = [seq(s[0]),seq(s[1])];
+	const colls = drop(2,s);
+	const ss = map(seq, conj(colls,s2,s1))
+
+	return isEvery(identity,ss) ?	concat(map(first,ss),i(...i(map(rest,ss)))) : []; 
+    }
+ }
+
+
+
+const isEvery = (pred,sq) => sq && sq.reduce((sum,el)=>  sum && pred(el),true)
+const rootObject = _ => (typeof global !== "undefined" ) ? global
+      : (typeof window !=="undefined")  ? window  
+      : undefined
 
 //time
 const start = () =>  {
-    _funcl_start__ =  new Date().getTime();
+
+    rootObject()['_funcl_start__'] =  new Date().getTime();
 }
 
 const end  = ()  => {
-    const ts = new Date().getTime() - _funcl_start__;
-    delete _funcl_start__;
+    const ts = new Date().getTime() - rootObject()['_funcl_start__'];
+    delete rootObject()['_funcl_start__'];
     return ts; 
 }
 
@@ -377,11 +422,13 @@ const conj =  (c,...el) => {
 }
 			     
 const concat = (...x) => { const s = map(seq,x); const ret =  [].concat(...s); return isString(ret[0]) ? ret.join("") : ret;  }
-const mapEntries_2map =  mes => Object.assign({}, ...mes.map(me =>  ({ [me[0]] : me[1] })))
+const intoMap =  mes => Object.assign({}, ...mes.map(me =>  ({ [me[0]] : me[1] })))
 
 const map  = (f,coll) =>  coll ?    seq(coll).map(x => f(x)) : partial(map,f);
 const filter  = (f,coll) =>  coll ?    seq(coll).filter(x => f(x)) : partial(filter,f);
 const reduce = (f,coll) =>  coll ? seq(coll).reduce(f) : partial(reduce,f)
+const merge = (...c) => isMap(c[0]) ? intoMap(concat(...c)) : pre(false,_ERR_KEYS.ERR_NOTIMPL); 
+
 
 const  range = (x,y,step) => {
     return (x<0 || y <= x) ? [] :
@@ -430,6 +477,7 @@ const toExport = {
     clone,
     concat,
     conj,
+    cons,
     count,
     dec,
     difference,
@@ -442,8 +490,9 @@ const toExport = {
     first,
     getIn,
     inc,
-    interleave,
+    i,
     intersection,
+    interleave,
     isAllOf,
     isArray,
     isAtom,
@@ -467,7 +516,8 @@ const toExport = {
     last,
     lowerCase,
     map,
-    mapEntries_2map,
+    merge, 
+    intoMap,
     nth,
     partial,
     partialR,
@@ -477,6 +527,7 @@ const toExport = {
     reduce,
     rest,
     reverse,
+    rootObject,
     second,
     seq,
     sort,
