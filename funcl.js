@@ -391,7 +391,7 @@ const first = coll =>  seq (coll) [0];
 const second = coll => seq (coll) [1]
 const last = coll =>  { const s = seq(coll); return s[s.length-1] }
 const rest = (coll) => seq (coll).slice(1)
-const nth = (coll,n) =>  n && pre(count(coll)>=n, _ERR_KEYS.ERR_OUT_OF_INDEX) ?  coll[n] :  c2 => partialR(nth,coll)(c2)
+const nth = (coll,n) =>  n && pre(count(coll)>=n, _ERR_KEYS.ERR_OUT_OF_INDEX) ?  seq(coll)[n] :  c2 => partialR(nth,seq(coll))(c2)
 const drop = (n,coll) => coll ? (n <= 0 ? seq (coll) : seq (coll).slice(n)) : c2 => partial(drop,n)(c2)
 const take = (n,coll) => coll ?   seq(coll).slice(0,n) : c2 => partial(take,n) (c2)
 const takeLast = (n,coll) =>  coll ? seq (coll).slice(-n) : c2 => partial(takeLast,n)(c2)
