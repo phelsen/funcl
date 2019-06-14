@@ -7,7 +7,7 @@ conj, cons, clone, eq, partial, partialR, pipe
 - string
 toUpperCase, toLowerCase
 - math 
-isEven, isOdd, sqr, isMultipleOf, sum
+isEven, isOdd, sqr, isMultipleOf, sum, randInt
 - maps
 merge
 - seqs 
@@ -357,6 +357,7 @@ const  partialR = (fn, ...args) => {
 const upperCase = x => x.toUpperCase()
 const lowerCase = x => x.toLowerCase()
 const str = x => x.toString()
+const split = (s,reg) => s.split(reg)
 
 // math
 const inc = x => x+1  
@@ -364,6 +365,7 @@ const dec = x => x-1
 const sqr = x => x * x
 const sum = (...coll) => !isArray(coll[0]) ? coll.reduce((x,y)=>x+y) : sum(...coll[0]); 
 const isMultipleOf = (x,y) => y ?  x % y == 0  : partialR(isMultipleOf,x);
+const randInt = max => Math.floor(Math.random(new Date().getTime)*max);
 const assoc = (coll,...kvs) => {
     if (!isMap(coll)) {
 	return partialR(assoc,coll,...kvs)    }
@@ -523,6 +525,7 @@ const toExport = {
     partialR,
     partition, 
     pipe,
+    randInt,
     range,
     reduce,
     rest,
@@ -532,6 +535,7 @@ const toExport = {
     seq,
     sort,
     sortBy,
+    split,
     sqr,
     sum, 
     start,

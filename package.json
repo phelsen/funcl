@@ -8,11 +8,11 @@
       "babelify": "^7.2.0",
       "terser": "^3.17.0"
    },
-    "scripts": {
-       "readme": "node  ./build/readme.js",
-	"build:base": "rm -rf dist && mkdir dist &&   terser funcl.js > dist/funcl.min.js ",
-	"build" : "npm run build:base && npm run readme && cp ./README.md  ./dist/ && cp ./build/package.json ./dist/",
-	"test": "node test.js"
+   "scripts": {
+      "readme": "node  ./build/readme.js",
+      "build:base": "rm -rf dist && mkdir dist &&   terser funcl.js > dist/funcl.min.js ",
+      "build": "npm run build:base && npm run readme && cp ./README.md  ./dist/ && cp ./build/package.json ./dist/",
+      "test": "node test.js"
    },
    "repository": {
       "type": "git",
