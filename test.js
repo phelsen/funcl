@@ -201,9 +201,9 @@ b("toggle,6","f.pipe([1],f.toggle(2),f.toggle(3),f.toggle(2))", [1,3]);
 b("eqSet,1", "f.eqSets([1,2,3],[1,2,3])",true)
 b("eqSet,2", "f.eqSets([1,2],[1,2,3])",false)
 b("eqSet,3", "f.eqSets([3,2,1],[1,2,3])",true)
-b("eqSet,3", "f.eqSets([{ a : 12 },2,1],[1,2,{ a : 12}])",true)
+b("eqSet,4", "f.eqSets([{ a : 12 },2,1],[1,2,{ a : 12}])",true)
 b("test42","everything=f.range(1e4); life=f.pipe(f.range(1,50),f.filter(f.isMultipleOf(6))); theUniverse=f.filter(f.isMultipleOf(7),f.range(1e4)); f.intersection(life,theUniverse,everything)",[42]);
-b("partion/inter" , "f.partition(2,f.interleave([1,2,3],[4,5,6]))",[[1,4],[2,5],[3,6]])
+b("partion/inter" , "f.partition(2,f.interleave2([1,2,3],[4,5,6]))",[[1,4],[2,5],[3,6]])
 b("takeWhile,1", "f.pipe(f.range(100),f.drop(80),f.reverse,f.takeWhile(x => x>90),f.filter(f.isOdd),f.map(f.inc))",[ 100, 98, 96, 94, 92 ])
 b("seqtest1", "f.seq([1,2,3,4])",[1,2,3,4])
 b("seqtest2", "f.seq({ a: 1 , b: 2 , c: 3 })",[['a',1],['b',2],['c',3]]);
@@ -218,6 +218,15 @@ b("concat", "f.concat([1,2,3],'bar','foo','yoo')", [1,2,3,'bar','foo','yoo'])
 b("conj", "f.conj([1,2,3],4,5)", [1,2,3,4,5])
 b("conj", "f.conj({  a : 12 , b : 22 },{c : 33} ,{ a :1 , d: 44})",  { a: 1, b : 22 , c: 33, d:44})
 b("merge","f.merge({ a : 12, b : 22, c : 99, d : 100} ,{a : 8, d : 12},{f : 9, g : 99})", {a : 8 , b : 22, c : 99, d : 12, f: 9, g : 99})
+b("assocIn,1", "f.assocIn({ a : 12 },['a'],42)", { a :42 });
+b("assocIn,2", "f.assocIn({ a : 12 },['b'],42)", { a :12, b : 42 });
+b("assocIn,3", "f.assocIn({ a : 12, b : [1, 2, 3] },['b',0],42)", { a : 12, b : [42, 2, 3] });
+b("getIn,1",  "f.getIn({ a : { c : 4}}, ['a','c', 'd', 'z'])", null);
+b("getIn,2",  "f.getIn({ a : { c : 4}}, ['j'])", null);
+b("getIn,3",  "f.getIn({ a : { c : 4}}, ['a','c'])", 4);
+b("getIn,4",  "f.getIn({ a : { c : 4}}, ['a'])", { c :  4 });
+
+
 const end = f.end();
 
 const nbNPassed = asserts.filter(x=>!x.testPassed).length;
