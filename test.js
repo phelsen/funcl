@@ -164,6 +164,8 @@ b("count,2", "f.count([1,2,3,4])",4)
 b("count,3", "f.count([])",0)
 b("count,4", "f.count({ a: 12 , b: 8, c: [1,2,3,4]})",3)
 b("count,5", "{ try {  f.count(new Date()) } catch(e) { e.message} }" , f.errMsg.ERR_NOT_SEQ)
+b("count,6", "f.count(null)",1)
+b("count,7", "f.count(undefined)",0)
 b("countable,1", "f.isCountable(new Date())",false)
 b("map,1",  "f.eq(f.map(f.inc, [1,2,3]),[2,3,4])",true);
 b("mappipe,1", "f.eq(f.pipe([1,2,3,4],f.map(f.inc),f.map(x=>2*x)),[4,6,8,10])",true);

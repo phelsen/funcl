@@ -229,7 +229,7 @@ const isString =  x => typeof x === "string"
 const isUndefined =  x => typeof x ==="undefined"
 const isDefined = x => typeof x !=="undefined"
 const isDefinedAndNotNull = x => x !== null && typeof x !== "undefined"
-
+const isNull = x => x === null;
 // fundamentals
 const vector = (...args) => args;
 
@@ -255,6 +255,7 @@ const type = (x) =>  isArray(x)  ?  "array"
       : isFunction(x) ? "function"
       : x === null ? "null"
       : typeof x;
+
 
 
 const eq = (a,b) =>  {  
@@ -421,10 +422,15 @@ const some = (pred,coll) => {
 }
 
 const  count = (coll) => {
+    if (coll===null || isUndefined(coll)) {
+        return 0; 
+    }
     pre(isCountable(seq(coll)), "ERR_NOT_COUNTABLE"); 
      return Array.isArray(coll) || isString(coll)  ? coll.length
-        : isMap(coll) ? Object.keys(coll).length : false
+        : isMap(coll) ? Object.keys(coll).length
+        : false
 }
+
 
 const conj =  (c,...el) => {
     if (isMap(c))  {
@@ -558,6 +564,7 @@ const toExport = {
     isMap,
     isMultipleOf,
     isNeg,
+    isNull,
     isNumber,
     isOdd,
     isPos,
